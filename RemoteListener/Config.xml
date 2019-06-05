@@ -26,7 +26,7 @@
 			<Action Mode="Mouse" Function="MouseClick" Repeat="0" />
 			<Action Mode="Mouse" Function="MouseHold" Repeat="5" />
 			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_RETURN" />
-		</Button>
+    </Button>
 		<Button Name="KEY_ENTER">
 			<Action Function="t9Send" />
 		</Button>
