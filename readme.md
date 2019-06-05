@@ -1,4 +1,3 @@
-=RemoteListener=
 This is an application that connects to a remote LIRC server and translates the remote buttons it receives into actions on a client.
 
 The Config.xml file holds a sample remote layout.
