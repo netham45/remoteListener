@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+	<Server Host="192.168.0.82" Port="8765" />
+	<Modes>
+		<Mode Name="Mouse" />
+		<Mode Name="Keyboard" />
+	</Modes>
+	<Remote Name="Microsoft_Xbox360">
+		<Button Name="UpArrow">
+			<Action Mode="Mouse" Function="MouseUp" Repeat="A" />
+			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_UP" />
+		</Button>
+		<Button Name="DownArrow">
+			<Action Mode="Mouse" Function="MouseDown" Repeat="A" />
+			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_DOWN" />
+		</Button>
+		<Button Name="LeftArrow">
+			<Action Mode="Mouse" Function="MouseLeft" Repeat="A" />
+			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_LEFT" />
+		</Button>
+		<Button Name="RightArrow">
+			<Action Mode="Mouse" Function="MouseRight" Repeat="A" />
+			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_RIGHT" />
+		</Button>
+		<Button Name="KEY_OK">
+			<Action Mode="Mouse" Function="MouseClick" Repeat="0" />
+			<Action Mode="Mouse" Function="MouseHold" Repeat="5" />
+			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_ENTER" />
+		</Button>
+		<Button Name="KEY_ENTER">
+			<Action Function="t9Send" />
+		</Button>
+		<Button Name="KEY_1">
+			<Action Function="t9" KeyCode="1" />
+		</Button>
+		<Button Name="KEY_2">
+			<Action Function="t9" KeyCode="2" />
+		</Button>
+		<Button Name="KEY_3">
+			<Action Function="t9" KeyCode="3" />
+		</Button>
+		<Button Name="KEY_4">
+			<Action Function="t9" KeyCode="4" />
+		</Button>
+		<Button Name="KEY_5">
+			<Action Function="t9" KeyCode="5" />
+		</Button>
+		<Button Name="KEY_6">
+			<Action Function="t9" KeyCode="6" />
+		</Button>
+		<Button Name="KEY_7">
+			<Action Function="t9" KeyCode="7" />
+		</Button>
+		<Button Name="KEY_8">
+			<Action Function="t9" KeyCode="8" />
+		</Button>
+		<Button Name="KEY_9">
+			<Action Function="t9" KeyCode="9" />
+		</Button>
+		<Button Name="KEY_0">
+			<Action Function="t9" KeyCode="0" />
+		</Button>
+		<Button Name="KEY_CLEAR">
+			<Action Function="t9Back" />
+		</Button>
+		<Button Name="KEY_PAGEUP">
+			<Action Mode="Mouse" Function="ScrollUp" />
+			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_PRIOR" />
+		</Button>
+		<Button Name="KEY_PAGEDOWN">
+			<Action Mode="Mouse" Function="ScrollDown" />
+			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_NEXT" />
+		</Button>
+		<Button Name="KEY_BACK">
+			<Action Function="SendVK" KeyCode="VK_ESCAPE" />
+		</Button>
+		<Button Name="Reload">
+			<Action Function="SendVK" KeyCode="VK_BACK" />
+		</Button>
+		<Button Name="KEY_INFO">
+			<!-- Nothing yet -->
+			<Action Function="BadFunctionTest" />
+		</Button>
+		<Button Name="XboxFancyButton">
+			<!-- Nothing yet -->
+		</Button>
+		<Button Name="KEY_RECORD" Repeat="0">
+			<Action Function="MouseCycleButton" />
+		</Button>
+		<Button Name="KEY_DISPLAY" Repeat="0">
+			<Action Function="ModeCycle" />
+		</Button>
+		<Button Name="KEY_TITLE">
+			<Action Function="ToggleVK" KeyCode="VK_MENU" />
+		</Button>
+		<Button Name="KEY_GREATER100">
+			<Action Function="ToggleVK" KeyCode="VK_LCTRL" />
+		</Button>
+		<Button Name="KEY_OPEN">
+			<Action Function="ToggleVK" KeyCode="VK_LSHIFT" />
+		</Button>
+		<Button Name="KEY_MEDIACENTER">
+			<Action Function="ToggleVK" KeyCode="VK_LWIN" />
+		</Button>
+		<Button Name="KEY_B">
+			<Action Function="Run" Param="&quot;c:\Program Files (x86)\Google\Chrome\Application\chrome.exe&quot; https://youtube.com/" />
+		</Button>
+		<Button Name="KEY_A">
+			<!-- Nothing yet -->
+		</Button>
+		<Button Name="KEY_Y">
+			<Action Function="ToggleScreens" />
+		</Button>
+		<Button Name="KEY_X">
+			<Action Function="Run" Param="&quot;c:\Program Files\Kodi\kodi.exe&quot;" />
+		</Button>
+		<Button Name="KEY_VOLUMEUP">
+			<Action Function="SendVK" KeyCode="VK_VOLUME_UP" />
+		</Button>
+		<Button Name="KEY_VOLUMEDOWN">
+			<Action Function="SendVK" KeyCode="VK_VOLUME_DOWN" />
+		</Button>
+		<Button Name="KEY_MUTE">
+			<Action Function="SendVK" KeyCode="VK_VOLUME_MUTE" />
+		</Button>
+		<Button Name="KEY_PREVIOUS">
+			<Action Function="SendVK" KeyCode="VK_MEDIA_PREV_TRACK" />
+		</Button>
+		<Button Name="KEY_NEXT">
+			<Action Function="SendVK" KeyCode="VK_MEDIA_NEXT_TRACK" />
+		</Button>
+		<Button Name="KEY_STOP">
+			<Action Function="SendVK" KeyCode="VK_MEDIA_STOP" />
+		</Button>
+		<Button Name="KEY_PLAY">
+			<Action Function="SendVK" KeyCode="VK_MEDIA_PLAY_PAUSE" />
+		</Button>
+		<Button Name="KEY_PAUSE">
+			<Action Function="SendVK" KeyCode="VK_MEDIA_PLAY_PAUSE" />
+		</Button>
+		<Button Name="KEY_POWERON">
+			<Action Function="ScreensOn" />
+		</Button>
+		<Button Name="KEY_POWEROFF">
+			<Action Function="ScreensOff" />
+		</Button>
+	</Remote>
+</Config>
