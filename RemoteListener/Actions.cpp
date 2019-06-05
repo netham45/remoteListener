@@ -13,14 +13,23 @@ void parseAction(const char* function, const char* repeat, const char* keycode, 
 	bool run = true;
 
 	//Check for filter conditions
-	if (getMode().compare(mode) != 0 && strcmp(mode,"D") != 0) //If the action has a mode set and we don't equal it
+	if (getMode().compare(mode) != 0 && strcmp(mode, "D") != 0) //If the action has a mode set and we don't equal it
+	{
 		run = false;
+	}
+
 	if (strcmp(repeat, "D") == 0) //If repeat is default
+	{
 		if (numRepeat > 0 && numRepeat < 3) //Don't repeat on 1 or 2
+		{
 			run = false;
-	else if (strcmp(repeat, "A") == 0); //A for Always Repeat
+		}
+	}
+	else if (strcmp(repeat, "A") == 0) {} //A for Always Repeat
 	else if (atoi(repeat) != numRepeat) //Else only repeat when repeat equals the desired value
+	{
 		run = false;
+	}
 
 	printf("\tAction - Function %s, KeyCode %s, param %s\n\t\tFilters - repeat %s, mode %s -- State - curMode %s, numRepeat %i -- Executing: %s\n",
 		function, keycode, param, repeat, mode, getMode().c_str(), numRepeat, run?"Yes":"No");
