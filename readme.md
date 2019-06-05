@@ -23,7 +23,7 @@ Valid actions:
 | SendVK | Friendly VK_KEY name (Eg. VK_ENTER) | N/A | Sends a keypress then a release |
 | ToggleVK| Friendly VK_KEY | N/A | Toggles the state of a key |
 | ModeCycle | N/A | N/A | Cycles between modes |
-| Run | N/A | Command to be executed | Runs a command |
+| Run | N/A | Command to be executed | Runs a commandline |
 | ToggleScreens | N/A | N/A | Toggles the screens between Extended  and One Screen |
 | ScreensOff | N/A | N/A | Turns the monitors off and locks the workstation |
 
