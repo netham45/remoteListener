@@ -1,4 +1,4 @@
-This is an application that connects to a remote LIRC server and translates the remote buttons it receives into actions on a client.
+This is an application that connects to a remote LIRC server and translates the remote buttons it receives into actions on a client. The project files are for Visual Studio 2019 Community Edition.
 
 The Config.xml file holds a sample remote layout.
 
