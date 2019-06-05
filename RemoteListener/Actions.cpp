@@ -40,7 +40,7 @@ void parseAction(const char* function, const char* repeat, const char* keycode, 
 	if (!headAction)
 		printf("No actions!\n");
 	else
-		for (Action* curAction = headAction; curAction->nextAction; curAction = curAction->nextAction)
+		for (Action* curAction = headAction; curAction; curAction = curAction->nextAction)
 			if (curAction->Name.compare(function) == 0)
 				curAction->callback(repeat, keycode, param, mode, numRepeat);
 }

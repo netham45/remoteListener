@@ -13,10 +13,51 @@ void SendKeys(const char* keys)
 }
 
 void SendKey(char key)
-{ //TODO: Convert to SendInput
-	char virtualKey = (char)VkKeyScanA(key);
-	keybd_event(virtualKey, 0, 0, 0);
-	keybd_event(virtualKey, 0, KEYEVENTF_KEYUP, 0);
+{
+	short vKey = (SHORT)VkKeyScanA(key);
+	PressKey(vKey);
+	ReleaseKey(vKey);
+}
+
+void PressKey(short vKey)
+{
+	INPUT input[10];
+	int inputHead = 0;
+	char modifiers = HIBYTE(vKey);
+	if (modifiers & 1)
+		makeInput(&input[inputHead++], VK_LSHIFT, 0);
+	if (modifiers & 2)
+		makeInput(&input[inputHead++], VK_LCONTROL, 0);
+	if (modifiers & 4)
+		makeInput(&input[inputHead++], VK_LMENU, 0);
+	makeInput(&input[inputHead++], vKey, 0);
+	SendInput(inputHead, input, sizeof(INPUT));
+}
+
+void ReleaseKey(short vKey)
+{
+	INPUT input[10];
+	int inputHead = 0;
+	char modifiers = HIBYTE(vKey);
+	makeInput(&input[inputHead++], vKey, KEYEVENTF_KEYUP);
+	if (modifiers & 1)
+		makeInput(&input[inputHead++], VK_LSHIFT, KEYEVENTF_KEYUP);
+	if (modifiers & 2)
+		makeInput(&input[inputHead++], VK_LCONTROL, KEYEVENTF_KEYUP);
+	if (modifiers & 4)
+		makeInput(&input[inputHead++], VK_LMENU, KEYEVENTF_KEYUP);
+	SendInput(inputHead, input, sizeof(INPUT));
+}
+
+void makeInput(INPUT *input,unsigned char wVk, DWORD dwFlags)
+{
+	input->type = INPUT_KEYBOARD;
+	input->ki.wScan = 0;
+	input->ki.time = 0;
+	input->ki.dwExtraInfo = 0;
+
+	input->ki.wVk = wVk;
+	input->ki.dwFlags = dwFlags;
 }
 
 
@@ -27,9 +68,8 @@ void SendVK_CB(const char* repeat, const char* keycode, const char* param, const
 
 void SendVK(const unsigned char vKey)
 {
-	//TODO: Convert to SendInput
-	keybd_event(vKey, 0, 0, 0);
-	keybd_event(vKey, 0, KEYEVENTF_KEYUP, 0);
+	PressKey(vKey);
+	ReleaseKey(vKey);
 	keyStates[vKey] = false;
 }
 
@@ -42,11 +82,11 @@ void ToggleVK(char vKey)
 {
 	if (keyStates[vKey]) //If it's currently pressed
 	{
-		keybd_event(vKey, 0, KEYEVENTF_KEYUP, 0);
+		ReleaseKey(vKey);
 	}
 	else //If it's not pressed
 	{
-		keybd_event(vKey, 0, 0, 0);
+		PressKey(vKey);
 	}
 	keyStates[vKey] = !keyStates[vKey]; //Invert the state
 }

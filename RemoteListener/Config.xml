@@ -79,7 +79,7 @@
 		</Button>
 		<Button Name="KEY_INFO">
 			<!-- Nothing yet -->
-			<Action Function="BadFunctionTest" />
+			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="/toggleBoth.php" />
 		</Button>
 		<Button Name="XboxFancyButton">
 			<!-- Nothing yet -->
