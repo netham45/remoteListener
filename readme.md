@@ -26,6 +26,7 @@ Valid actions:
 | Run | N/A | Command to be executed | Runs a commandline |
 | ToggleScreens | N/A | N/A | Toggles the screens between Extended  and One Screen |
 | ScreensOff | N/A | N/A | Turns the monitors off and locks the workstation |
+| WebRequest | Page | Host | Sends a web request and discards the response |
 
 There are two additional parameters, Mode and Repeat. These can be used on any action.
 If Mode is specified the action will only run if it's in the right mode, such as only running if it's in Keyboard mode. Additional modes can be added under the Modes section
