@@ -38,13 +38,12 @@ void parseAction(const char* function, const char* repeat, const char* keycode, 
 		return;
 
 	if (!headAction)
-		printf("No actions!\n");
+		printf("No action callbacks registered!\n");
 	else
 		for (Action* curAction = headAction; curAction; curAction = curAction->nextAction)
 			if (curAction->Name.compare(function) == 0)
 				curAction->callback(repeat, keycode, param, mode, numRepeat);
 }
-
 
 
 Action* getLastAction()

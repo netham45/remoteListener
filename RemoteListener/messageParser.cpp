@@ -2,17 +2,50 @@
 #include "messageParser.h"
 #include "Configs.h"
 
+int parsedVersion = 0;
+
 void parseMessage(char* message, unsigned int messageLen)
 {
-	char button[DEFAULT_BUFLEN];
-	char device[DEFAULT_BUFLEN];
+	char button[DEFAULT_BUFLEN] = { 0 };
+	char device[DEFAULT_BUFLEN] = { 0 };
 
 	char repeatStr[DEFAULT_BUFLEN];
 	unsigned int repeat = 0;
 
 	unsigned int head = 0;
 	unsigned int bufHead = 0;
+	switch (parsedVersion)
+	{
 
+	case 0:
+		while (message[++head] != '\n' && head < messageLen); //BEGIN
+	case 1:
+		if (head < messageLen) parsedVersion++;
+		while (message[++head] != '\n' && head < messageLen); //SUCCESS
+	case 2:
+		if (head < messageLen) parsedVersion++;
+		while (message[++head] != '\n' && head < messageLen); //VERSION
+	case 3:
+		if (head < messageLen) parsedVersion++;
+		while (message[++head] != '\n' && head < messageLen); //[DATA
+	case 4:
+		if (head < messageLen) parsedVersion++;
+		while (message[++head] != '\n' && head < messageLen); //1 (line)
+	case 5:
+		unsigned int verHead, verLength;
+		if (head < messageLen) parsedVersion++;
+		verHead = head + 1; //+1 to remove \n
+		while (message[++head] != '\n' && head < messageLen); //<VERSION>
+		verLength = head - verHead;
+		if (parsedVersion == 6)printf("Connected\nlircd Server Version: %.*s\n",verLength, &message[verHead]);
+	case 6:
+		if (head < messageLen) parsedVersion++;
+		while (message[++head] != '\n' && head < messageLen); //END
+		
+	}
+
+	if (head >= messageLen)
+		return;
 	while (message[++head] != ' ' && head < messageLen); //Skip the first field
 	while (message[++head] != ' ' && head < messageLen) //Read the Repeat Code, copy it to the repeatStr buffer
 		repeatStr[bufHead++] = message[head];
@@ -29,6 +62,9 @@ void parseMessage(char* message, unsigned int messageLen)
 	while (message[++head] != '\x0A' && head < messageLen) //Read the Device Name, copy it to the device buffer
 		device[bufHead++] = message[head];
 	device[bufHead] = 0; //Null-terminate the string
-	printf("Input: %s:%s\n", device, button);
-	runActionsForDeviceButton(device, button, repeat);
+	if (strlen(device) && strlen(button))
+	{
+		printf("Input: %s:%s\n", device, button);
+		runActionsForDeviceButton(device, button, repeat);
+	}
 }

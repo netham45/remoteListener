@@ -15,6 +15,7 @@ int start(PCSTR server, PCSTR port)
 		char recvbuf[DEFAULT_BUFLEN];
 		int iResult;
 		unsigned int recvbuflen = DEFAULT_BUFLEN;
+		int parsedVersion = 0;
 
 		// Initialize Winsock
 		iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -63,14 +64,14 @@ int start(PCSTR server, PCSTR port)
 
 		freeaddrinfo(result);
 
-		/*// Send an initial buffer
+		// Send an initial buffer
 		iResult = send(ConnectSocket, HELO, (int)strlen(HELO), 0);
 		if (iResult == SOCKET_ERROR) {
 			printf("send failed with error: %d\n", WSAGetLastError());
 			closesocket(ConnectSocket);
 			WSACleanup();
 			return 1;
-		}*/
+		}
 
 		if (ConnectSocket == INVALID_SOCKET) {
 			printf("Unable to connect to server!\n");
@@ -84,7 +85,7 @@ int start(PCSTR server, PCSTR port)
 			iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
 			if (iResult > 0)
 			{
-				parseMessage(recvbuf, recvbuflen);
+					parseMessage(recvbuf, iResult);
 			}
 			else if (iResult == 0)
 				printf("Connection closed\n");

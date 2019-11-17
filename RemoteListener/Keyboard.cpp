@@ -40,12 +40,12 @@ void ReleaseKey(short vKey)
 	int inputHead = 0;
 	char modifiers = HIBYTE(vKey);
 	makeInput(&input[inputHead++], vKey, KEYEVENTF_KEYUP);
-	if (modifiers & 1)
-		makeInput(&input[inputHead++], VK_LSHIFT, KEYEVENTF_KEYUP);
-	if (modifiers & 2)
-		makeInput(&input[inputHead++], VK_LCONTROL, KEYEVENTF_KEYUP);
 	if (modifiers & 4)
 		makeInput(&input[inputHead++], VK_LMENU, KEYEVENTF_KEYUP);
+	if (modifiers & 2)
+		makeInput(&input[inputHead++], VK_LCONTROL, KEYEVENTF_KEYUP);
+	if (modifiers & 1)
+		makeInput(&input[inputHead++], VK_LSHIFT, KEYEVENTF_KEYUP);
 	SendInput(inputHead, input, sizeof(INPUT));
 }
 

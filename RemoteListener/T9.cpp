@@ -118,6 +118,7 @@ void initializeT9Form()
 			{
 				TranslateMessage(&messages);
 				DispatchMessage(&messages);
+				Sleep(100);
 			}
 			return 0;
 		},
