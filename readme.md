@@ -56,4 +56,4 @@ T9 works like T9 on a phone. Here are the T9 keys:
 9: "wxyz9WXYZ"
 ```
 
-WebRequest takes the Page for the Keycoede, such as "/index.php" and a server for the Params, such as "192.168.0.82" or "google.com".
+WebRequest takes the Page for the Keycode, such as "/index.php" and a server for the Params, such as "192.168.0.82" or "google.com".
