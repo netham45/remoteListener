@@ -1,5 +1,6 @@
 #include "Configs.h"
 #include <string>
+#include <cstring>
 #include <fstream>
 #include <filesystem>
 #include <sstream>
@@ -10,7 +11,6 @@
 #include "rapidxml_utils.hpp"
 
 using namespace rapidxml;
-using namespace std::experimental::filesystem;
 using namespace std;
 
 xml_document<> cachedDoc;
@@ -26,7 +26,7 @@ void cacheDoc()
 		buffer = vector<char>((istreambuf_iterator<char>(t)), istreambuf_iterator<char>());
 		buffer.push_back('\0');
 		t.close();
- 		cachedDoc.parse<0>(&buffer[0]);
+		cachedDoc.parse<0>(&buffer[0]);
 		parsed = true;
 	}
 }
@@ -58,11 +58,12 @@ void runActionsForDeviceButton(const char* deviceName, const char* buttonName, i
 							continue;
 						if (strcmp(attr->value(), buttonName) == 0) //If the Button Name equals the provided button
 						{
+							bool outputDevice = true;
 							for (xml_node<>* pAction = pButton->first_node(); pAction; pAction = pAction->next_sibling()) //For each child of the button (action to perform)
 							{
 								if (strcmp(pAction->name(), "Action") != 0)
 									continue;
-								string param = "D", keycode = "D", function = "D", repeat = "D", mode = "D", state = "D"; //Used to indicate the action doesn't override default behavior
+								string param = "D", keycode = "D", function = "D", repeat = "D", mode = "D", modeType = "D", state = "D", OS = "D"; //Used to indicate the action doesn't override default behavior
 								for (xml_attribute<>* attr = pAction->first_attribute(); //For each attribute on the action
 									attr; attr = attr->next_attribute())
 								{
@@ -86,9 +87,19 @@ void runActionsForDeviceButton(const char* deviceName, const char* buttonName, i
 									{
 										mode = attr->value();
 									}
+									else if (strcmp(attr->name(), "ModeType") == 0) //Mode
+									{
+										modeType = attr->value();
+									}
+									else if (strcmp(attr->name(), "OS") == 0) //Mode
+									{
+										OS = attr->value();
+									}
 								}
-								parseAction(function.c_str(), repeat.c_str(), keycode.c_str(), param.c_str(), mode.c_str(), numRepeat);
+								parseAction(deviceName, buttonName, function.c_str(), repeat.c_str(), keycode.c_str(), param.c_str(), mode.c_str(), modeType.c_str(), OS.c_str(), numRepeat, &outputDevice);
 							}
+							//if (outputDevice && numRepeat == 0)
+							//	printf("Input - Device % s Button % s -- No Actions\n", deviceName, buttonName);
 							return;
 						}
 					}
@@ -98,22 +109,25 @@ void runActionsForDeviceButton(const char* deviceName, const char* buttonName, i
 	}
 }
 
-std::vector<std::string> getModes()
+std::vector<std::string> getModes(const char* modeClass)
 {
 	vector <string> modes;
 
 	cacheDoc();
 	xml_node<>* pRoot = cachedDoc.first_node();
 	for (xml_node<>* pModes = pRoot->first_node(); pModes; pModes = pModes->next_sibling()) //For Each State
-		if (strcmp(pModes->name(),"Modes") == 0)
-			for (xml_node<>* pMode = pModes->first_node(); pMode; pMode = pMode->next_sibling()) //For Each State
-				for (xml_attribute<>* attr = pMode->first_attribute(); attr; attr = attr->next_attribute())
-					if (strcmp(attr->name(), "Name") == 0)
-						modes.push_back(attr->value());
+		if (strcmp(pModes->name(), "Modes") == 0)
+			for (xml_attribute<>* attr = pModes->first_attribute(); attr; attr = attr->next_attribute())
+				if (strcmp(attr->name(), "Name") == 0)
+					if (strcmp(attr->value(),modeClass) == 0)
+						for (xml_node<>* pMode = pModes->first_node(); pMode; pMode = pMode->next_sibling()) //For Each State
+							for (xml_attribute<>* attr = pMode->first_attribute(); attr; attr = attr->next_attribute())
+								if (strcmp(attr->name(), "Name") == 0)
+									modes.push_back(attr->value());
 	return modes;
 }
 
-PCSTR getServer()
+const char* getServer()
 {
 	cacheDoc();
 	xml_node<>* pRoot = cachedDoc.first_node();
@@ -127,7 +141,7 @@ PCSTR getServer()
 	return "";
 }
 
-PCSTR getPort()
+const char* getPort()
 {
 	cacheDoc();
 	xml_node<>* pRoot = cachedDoc.first_node();

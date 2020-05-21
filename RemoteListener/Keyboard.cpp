@@ -61,7 +61,7 @@ void makeInput(INPUT *input,unsigned char wVk, DWORD dwFlags)
 }
 
 
-void SendVK_CB(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void SendVK_CB(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	SendVK(vkFromFriendlyName(keycode));
 }
@@ -73,9 +73,19 @@ void SendVK(const unsigned char vKey)
 	keyStates[vKey] = false;
 }
 
-void ToggleVK_CB(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void ToggleVK_CB(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	ToggleVK(vkFromFriendlyName(keycode));
+}
+
+void PressVK_CB(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
+{
+	PressVK(vkFromFriendlyName(keycode));
+}
+
+void ReleaseVK_CB(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
+{
+	ReleaseVK(vkFromFriendlyName(keycode));
 }
 
 void ToggleVK(char vKey)
@@ -89,6 +99,24 @@ void ToggleVK(char vKey)
 		PressKey(vKey);
 	}
 	keyStates[vKey] = !keyStates[vKey]; //Invert the state
+}
+
+void PressVK(char vKey)
+{
+	if (!keyStates[vKey]) //If it's not currently pressed
+	{
+		PressKey(vKey);
+	}
+	keyStates[vKey] = true;
+}
+
+void ReleaseVK(char vKey)
+{
+	if (keyStates[vKey]) //If it's currently pressed
+	{
+		ReleaseKey(vKey);
+	}
+	keyStates[vKey] = false;
 }
 
 unsigned char vkFromFriendlyName(const char* friendlyName)
@@ -869,4 +897,6 @@ void registerKeyboardActions()
 {
 	registerActionCallback(&SendVK_CB, "SendVK");
 	registerActionCallback(&ToggleVK_CB, "ToggleVK");
+	registerActionCallback(&PressVK_CB, "PressVK");
+	registerActionCallback(&ReleaseVK_CB, "ReleaseVK");
 }

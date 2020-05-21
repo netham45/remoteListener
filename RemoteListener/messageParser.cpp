@@ -1,6 +1,6 @@
-#pragma once
 #include "messageParser.h"
 #include "Configs.h"
+#include <string.h>
 
 int parsedVersion = 0;
 
@@ -14,34 +14,32 @@ void parseMessage(char* message, unsigned int messageLen)
 
 	unsigned int head = 0;
 	unsigned int bufHead = 0;
+	unsigned int startHead = head;
 	switch (parsedVersion)
 	{
-
 	case 0:
 		while (message[++head] != '\n' && head < messageLen); //BEGIN
 	case 1:
-		if (head < messageLen) parsedVersion++;
+		if (head < messageLen) parsedVersion++; else break;
 		while (message[++head] != '\n' && head < messageLen); //SUCCESS
 	case 2:
-		if (head < messageLen) parsedVersion++;
+		if (head < messageLen) parsedVersion++; else break;
 		while (message[++head] != '\n' && head < messageLen); //VERSION
 	case 3:
-		if (head < messageLen) parsedVersion++;
+		if (head < messageLen) parsedVersion++; else break;
 		while (message[++head] != '\n' && head < messageLen); //[DATA
 	case 4:
-		if (head < messageLen) parsedVersion++;
+		if (head < messageLen) parsedVersion++; else break;
 		while (message[++head] != '\n' && head < messageLen); //1 (line)
 	case 5:
-		unsigned int verHead, verLength;
-		if (head < messageLen) parsedVersion++;
-		verHead = head + 1; //+1 to remove \n
+		startHead = head + 1;
+		if (head < messageLen) parsedVersion++; else break;
 		while (message[++head] != '\n' && head < messageLen); //<VERSION>
-		verLength = head - verHead;
-		if (parsedVersion == 6)printf("Connected\nlircd Server Version: %.*s\n",verLength, &message[verHead]);
+		printf("Connected\nlircd Server Version: %.*s\n", head - startHead, message + startHead);
 	case 6:
-		if (head < messageLen) parsedVersion++;
+		if (head < messageLen) parsedVersion++; else break;
 		while (message[++head] != '\n' && head < messageLen); //END
-		
+		parsedVersion++;
 	}
 
 	if (head >= messageLen)
@@ -64,7 +62,6 @@ void parseMessage(char* message, unsigned int messageLen)
 	device[bufHead] = 0; //Null-terminate the string
 	if (strlen(device) && strlen(button))
 	{
-		printf("Input: %s:%s\n", device, button);
 		runActionsForDeviceButton(device, button, repeat);
 	}
 }

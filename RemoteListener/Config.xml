@@ -1,148 +1,339 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Config>
-	<Server Host="192.168.0.82" Port="8765" />
-	<Modes>
-		<Mode Name="Mouse" />
-		<Mode Name="Keyboard" />
-	</Modes>
-	<Remote Name="Microsoft_Xbox360">
-		<Button Name="UpArrow">
-			<Action Mode="Mouse" Function="MouseUp" Repeat="A" />
-			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_UP" />
-		</Button>
-		<Button Name="DownArrow">
-			<Action Mode="Mouse" Function="MouseDown" Repeat="A" />
-			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_DOWN" />
-		</Button>
-		<Button Name="LeftArrow">
-			<Action Mode="Mouse" Function="MouseLeft" Repeat="A" />
-			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_LEFT" />
-		</Button>
-		<Button Name="RightArrow">
-			<Action Mode="Mouse" Function="MouseRight" Repeat="A" />
-			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_RIGHT" />
-		</Button>
-		<Button Name="KEY_OK">
-			<Action Mode="Mouse" Function="MouseClick" Repeat="0" />
-			<Action Mode="Mouse" Function="MouseHold" Repeat="5" />
-			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_RETURN" />
+  <Server Host="192.168.0.82" Port="8765" />
+  <Modes Name="Input">
+    <Mode Name="Mouse" />
+    <Mode Name="Keyboard" />
+  </Modes>
+  <Modes Name="Screens">
+    <Mode Name="ScreenAll" />
+    <Mode Name="ScreenProjector" />
+    <Mode Name="ScreenTV" />
+  </Modes>
+  <Modes Name="AltTab">
+    <Mode Name="Active" />
+    <Mode Name="Inactive" />
+  </Modes>
+  <Modes Name="AltTabPriorInput">
+    <Mode Name="Mouse" />
+    <Mode Name="Keyboard" />
+  </Modes>
+  <Remote Name="LED_44_KEY">
+    <Button Name="RED_UP">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb increment 08 00 00 08 00 00" OS="Linux" />
     </Button>
-		<Button Name="KEY_ENTER">
-			<Action Function="t9Send" />
-		</Button>
-		<Button Name="KEY_1">
-			<Action Function="t9" KeyCode="1" />
-		</Button>
-		<Button Name="KEY_2">
-			<Action Function="t9" KeyCode="2" />
-		</Button>
-		<Button Name="KEY_3">
-			<Action Function="t9" KeyCode="3" />
-		</Button>
-		<Button Name="KEY_4">
-			<Action Function="t9" KeyCode="4" />
-		</Button>
-		<Button Name="KEY_5">
-			<Action Function="t9" KeyCode="5" />
-		</Button>
-		<Button Name="KEY_6">
-			<Action Function="t9" KeyCode="6" />
-		</Button>
-		<Button Name="KEY_7">
-			<Action Function="t9" KeyCode="7" />
-		</Button>
-		<Button Name="KEY_8">
-			<Action Function="t9" KeyCode="8" />
-		</Button>
-		<Button Name="KEY_9">
-			<Action Function="t9" KeyCode="9" />
-		</Button>
-		<Button Name="KEY_0">
-			<Action Function="t9" KeyCode="0" />
-		</Button>
-		<Button Name="KEY_CLEAR">
-			<Action Function="t9Back" />
-		</Button>
-		<Button Name="KEY_PAGEUP">
-			<Action Mode="Mouse" Function="ScrollUp" />
-			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_PRIOR" />
-		</Button>
-		<Button Name="KEY_PAGEDOWN">
-			<Action Mode="Mouse" Function="ScrollDown" />
-			<Action Mode="Keyboard" Function="SendVK" KeyCode="VK_NEXT" />
-		</Button>
-		<Button Name="KEY_BACK">
-			<Action Function="SendVK" KeyCode="VK_ESCAPE" />
-		</Button>
-		<Button Name="Reload">
-			<Action Function="SendVK" KeyCode="VK_BACK" />
-		</Button>
-		<Button Name="KEY_INFO">
-			<!-- Nothing yet -->
-			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="/toggleBoth.php" />
-		</Button>
-		<Button Name="XboxFancyButton">
-			<!-- Nothing yet -->
-		</Button>
-		<Button Name="KEY_RECORD" Repeat="0">
-			<Action Function="MouseCycleButton" />
-		</Button>
-		<Button Name="KEY_DISPLAY" Repeat="0">
-			<Action Function="ModeCycle" />
-		</Button>
-		<Button Name="KEY_TITLE">
-			<Action Function="ToggleVK" KeyCode="VK_MENU" />
-		</Button>
-		<Button Name="KEY_GREATER100">
-			<Action Function="ToggleVK" KeyCode="VK_LCTRL" />
-		</Button>
-		<Button Name="KEY_OPEN">
-			<Action Function="ToggleVK" KeyCode="VK_LSHIFT" />
-		</Button>
-		<Button Name="KEY_MEDIACENTER">
-			<Action Function="ToggleVK" KeyCode="VK_LWIN" />
-		</Button>
-		<Button Name="KEY_B">
-			<Action Function="Run" Param="&quot;c:\Program Files (x86)\Google\Chrome\Application\chrome.exe&quot; https://youtube.com/" />
-		</Button>
-		<Button Name="KEY_A">
-			<!-- Nothing yet -->
-		</Button>
-		<Button Name="KEY_Y">
-			<Action Function="ToggleScreens" />
-		</Button>
-		<Button Name="KEY_X">
-			<Action Function="Run" Param="&quot;c:\Program Files\Kodi\kodi.exe&quot;" />
-		</Button>
-		<Button Name="KEY_VOLUMEUP">
-			<Action Function="SendVK" KeyCode="VK_VOLUME_UP" />
-		</Button>
-		<Button Name="KEY_VOLUMEDOWN">
-			<Action Function="SendVK" KeyCode="VK_VOLUME_DOWN" />
-		</Button>
-		<Button Name="KEY_MUTE">
-			<Action Function="SendVK" KeyCode="VK_VOLUME_MUTE" />
-		</Button>
-		<Button Name="KEY_PREVIOUS">
-			<Action Function="SendVK" KeyCode="VK_MEDIA_PREV_TRACK" />
-		</Button>
-		<Button Name="KEY_NEXT">
-			<Action Function="SendVK" KeyCode="VK_MEDIA_NEXT_TRACK" />
-		</Button>
-		<Button Name="KEY_STOP">
-			<Action Function="SendVK" KeyCode="VK_MEDIA_STOP" />
-		</Button>
-		<Button Name="KEY_PLAY">
-			<Action Function="SendVK" KeyCode="VK_MEDIA_PLAY_PAUSE" />
-		</Button>
-		<Button Name="KEY_PAUSE">
-			<Action Function="SendVK" KeyCode="VK_MEDIA_PLAY_PAUSE" />
-		</Button>
-		<Button Name="KEY_POWERON">
-			<Action Function="ScreensOn" />
-		</Button>
-		<Button Name="KEY_POWEROFF">
-			<Action Function="ScreensOff" />
-		</Button>
-	</Remote>
+    <Button Name="GREEN_UP">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb increment 00 08 00 00 08 00" OS="Linux" />
+    </Button>
+    <Button Name="BLUE_UP">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb increment 00 00 08 00 00 08" OS="Linux" />
+    </Button>
+    <Button Name="BRIGHT_UP">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb increment 08 08 08 08 08 08" OS="Linux" />
+    </Button>
+    <Button Name="RED_DOWN">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb decrement 08 00 00 08 00 00" OS="Linux" />
+    </Button>
+    <Button Name="GREEN_DOWN">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb decrement 00 08 00 00 08 00" OS="Linux" />
+    </Button>
+    <Button Name="BLUE_DOWN">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb decrement 00 00 08 00 00 08" OS="Linux" />
+    </Button>
+    <Button Name="BRIGHT_DOWN">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb decrement 08 08 08 08 08 08" OS="Linux" />
+    </Button>
+    <Button Name="RED">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static FF0000 FF0000" OS="Linux" />
+    </Button>
+    <Button Name="GREEN">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static 008000 008000" OS="Linux" />
+    </Button>
+    <Button Name="BLUE">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static 0000FF 0000FF" OS="Linux" />
+    </Button>
+    <Button Name="ORANGE">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static FFA500 FFA500" OS="Linux" />
+    </Button>
+    <Button Name="PEA_GREEN">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static 739122 739122" OS="Linux" />
+    </Button>
+    <Button Name="DARK_BLUE">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static 00008B 00008B" OS="Linux" />
+    </Button>
+    <Button Name="DARK_YELLOW">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static DAA520 DAA520" OS="Linux" />
+    </Button>
+    <Button Name="CYAN">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static 00FFFF 00FFFF" OS="Linux" />
+    </Button>
+    <Button Name="BROWN">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static A52A2A A52A2A" OS="Linux" />
+    </Button>
+    <Button Name="YELLOW">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static FFFF00 FFFF00" OS="Linux" />
+    </Button>
+    <Button Name="LIGHT_BLUE">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static ADD8E6 ADD8E6" OS="Linux" />
+    </Button>
+    <Button Name="PINK">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static FF1493 FF1493" OS="Linux" />
+    </Button>
+    <Button Name="STRAW_YELLOW">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static FFD700 FFD700" OS="Linux" />
+    </Button>
+    <Button Name="SKY_BLUE">^
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static 87CEEB 87CEEB" OS="Linux" />
+    </Button>
+    <Button Name="PURPLE">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static 800080 800080" OS="Linux" />
+    </Button>
+    <Button Name="WHITE">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb static FFFFFF FFFFFF" OS="Linux" />
+    </Button>
+    <Button Name="SKIP">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb cycle" OS="Linux" />
+    </Button>
+    <Button Name="POWER">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb off" OS="Linux" />
+    </Button>
+  </Remote>
+  <Remote Name="RCA_CRK76CA2">
+    <Button Name="hd-on-off">
+      <Action Function="ProjectorPowerToggle" Param="192.168.0.138" OS="Linux" />
+    </Button>
+    <Button Name="hd-up">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="KYUP___1" OS="Linux" />
+    </Button>
+    <Button Name="hd-down">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="KYDO___1" OS="Linux" />
+    </Button>
+    <Button Name="hd-left">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="KYLE___1" OS="Linux" />
+    </Button>
+    <Button Name="hd-right">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="KYRI___1" OS="Linux" />
+    </Button>
+    <Button Name="hd-menu">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="KYMN___1" OS="Linux" />
+    </Button>
+    <Button Name="hd-info">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="STAT????" OS="Linux" />
+    </Button>
+    <Button Name="hd-guide">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="KYIF___1" OS="Linux" />
+    </Button>
+    <Button Name="hd-ok">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="KYEN___1" OS="Linux" />
+    </Button>
+    <Button Name="hd-input">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="KYIN___1" OS="Linux" />
+    </Button>
+    <Button Name="hd-clear">
+      <!-- Exit -->
+    </Button>
+    <Button Name="hd-go-back">
+    </Button>
+    <Button Name="hd-up">
+    </Button>
+    <Button Name="hd-ch-">
+    </Button>
+    <Button Name="hd-ch+">
+    </Button>
+    <Button Name="hd-forward">
+    </Button>
+    <Button Name="hd-reverse">
+    </Button>
+    <Button Name="hd-play">
+    </Button>
+    <Button Name="hd-pause">
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="KYFR___1" OS="Linux" />
+    </Button>
+    <Button Name="hd-stop">
+    </Button>
+    <Button Name="hd-record">
+    </Button>
+    <Button Name="hd-1">
+    </Button>
+    <Button Name="hd-2">
+    </Button>
+    <Button Name="hd-3">
+    </Button>
+    <Button Name="hd-4">
+    </Button>
+    <Button Name="hd-5">
+    </Button>
+    <Button Name="hd-6">
+    </Button>
+    <Button Name="hd-7">
+    </Button>
+    <Button Name="hd-8">
+    </Button>
+    <Button Name="hd-9">
+    </Button>
+    <Button Name="hd-0">
+    </Button>
+  </Remote>
+  <Remote Name="Microsoft_Xbox360">
+    <Button Name="UpArrow">
+      <Action ModeType="Input" Mode="Mouse" Function="MouseUp" Repeat="A" OS="Windows" />
+      <Action ModeType="Input" Mode="Keyboard" Function="SendVK" KeyCode="VK_UP" OS="Windows" />
+    </Button>
+    <Button Name="DownArrow">
+      <Action ModeType="Input" Mode="Mouse" Function="MouseDown" Repeat="A" OS="Windows" />
+      <Action ModeType="Input" Mode="Keyboard" Function="SendVK" KeyCode="VK_DOWN" OS="Windows" />
+    </Button>
+    <Button Name="LeftArrow">
+      <Action ModeType="Input" Mode="Mouse" Function="MouseLeft" Repeat="A" OS="Windows" />
+      <Action ModeType="Input" Mode="Keyboard" Function="SendVK" KeyCode="VK_LEFT" OS="Windows" />
+    </Button>
+    <Button Name="RightArrow">
+      <Action ModeType="Input" Mode="Mouse" Function="MouseRight" Repeat="A" OS="Windows" />
+      <Action ModeType="Input" Mode="Keyboard" Function="SendVK" KeyCode="VK_RIGHT" OS="Windows" />
+    </Button>
+    <Button Name="KEY_OK">
+      <Action ModeType="Input" Mode="Mouse" Function="MouseClick" Repeat="0" OS="Windows" />
+      <Action ModeType="Input" Mode="Mouse" Function="MouseHold" Repeat="5" OS="Windows" />
+      <Action ModeType="Input" Mode="Keyboard" Function="SendVK" KeyCode="VK_RETURN" OS="Windows" />
+      <Action Function="ReleaseVK" KeyCode="VK_MENU" ModeType="AltTab" Mode="Active" OS="Windows" />
+      <Action Function="ModeSet" KeyCode="AltTab" Param="Inactive" ModeType="AltTab" Mode="Active" OS="Windows" />
+    </Button>
+    <Button Name="KEY_ENTER">
+      <Action Function="t9Send" OS="Windows" />
+    </Button>
+    <Button Name="KEY_1">
+      <Action Function="t9" KeyCode="1" OS="Windows" />
+    </Button>
+    <Button Name="KEY_2">
+      <Action Function="t9" KeyCode="2" OS="Windows" />
+    </Button>
+    <Button Name="KEY_3">
+      <Action Function="t9" KeyCode="3" OS="Windows" />
+    </Button>
+    <Button Name="KEY_4">
+      <Action Function="t9" KeyCode="4" OS="Windows" />
+    </Button>
+    <Button Name="KEY_5">
+      <Action Function="t9" KeyCode="5" OS="Windows" />
+    </Button>
+    <Button Name="KEY_6">
+      <Action Function="t9" KeyCode="6" OS="Windows" />
+    </Button>
+    <Button Name="KEY_7">
+      <Action Function="t9" KeyCode="7" OS="Windows" />
+    </Button>
+    <Button Name="KEY_8">
+      <Action Function="t9" KeyCode="8" OS="Windows" />
+    </Button>
+    <Button Name="KEY_9">
+      <Action Function="t9" KeyCode="9" OS="Windows" />
+    </Button>
+    <Button Name="KEY_0">
+      <Action Function="t9" KeyCode="0" OS="Windows" />
+    </Button>
+    <Button Name="KEY_CLEAR">
+      <Action Function="t9Back" OS="Windows" />
+    </Button>
+    <Button Name="KEY_PAGEUP">
+      <Action ModeType="Input" Mode="Mouse" Function="ScrollUp" OS="Windows" Repeat="A" />
+      <Action ModeType="Input" Mode="Keyboard" Function="SendVK" KeyCode="VK_PRIOR" OS="Windows" />
+    </Button>
+    <Button Name="KEY_PAGEDOWN">
+      <Action ModeType="Input" Mode="Mouse" Function="ScrollDown" OS="Windows" Repeat="A" />
+      <Action ModeType="Input" Mode="Keyboard" Function="SendVK" KeyCode="VK_NEXT" OS="Windows" />
+    </Button>
+    <Button Name="KEY_BACK">
+      <Action Function="SendVK" KeyCode="VK_ESCAPE" OS="Windows" />
+    </Button>
+    <Button Name="Reload">
+      <Action Function="SendVK" KeyCode="VK_BACK" OS="Windows" />
+    </Button>
+    <Button Name="KEY_INFO">
+      <Action Function="WebRequest" Param="192.168.0.18" KeyCode="/toggleBoth.php" OS="Linux" />
+    </Button>
+    <Button Name="XboxFancyButton">
+      <Action Function="ModeSet" KeyCode="AltTab" Param="Active" OS="Windows" />
+      <Action Function="ModeSet" KeyCode="Input" Param="Keyboard" OS="Windows" />
+      <Action Function="PressVK" KeyCode="VK_MENU" OS="Windows" />
+      <Action Function="SendVK" KeyCode="VK_TAB" OS="Windows" />
+    </Button>
+    <Button Name="KEY_RECORD" Repeat="0">
+      <Action Function="MouseCycleButton" OS="Windows" />
+    </Button>
+    <Button Name="KEY_DISPLAY" Repeat="0">
+      <Action Param="Input" Function="ModeCycle" OS="Windows" />
+    </Button>
+    <Button Name="KEY_TITLE" Repeat="0">
+      <Action Function="ToggleVK" KeyCode="VK_MENU" OS="Windows" />
+    </Button>
+    <Button Name="KEY_GREATER100">
+      <Action Function="ToggleVK" KeyCode="VK_LCTRL" OS="Windows" />
+    </Button>
+    <Button Name="KEY_OPEN">
+      <Action Function="ToggleVK" KeyCode="VK_LSHIFT" OS="Windows" />
+    </Button>
+    <Button Name="KEY_MEDIACENTER">
+      <Action Function="ToggleVK" KeyCode="VK_LWIN" OS="Windows" />
+    </Button>
+    <Button Name="KEY_B">
+      <Action Function="Run" Param="&quot;c:\Program Files (x86)\Google\Chrome\Application\chrome.exe&quot; https://youtube.com/" OS="Windows" />
+    </Button>
+    <Button Name="KEY_A">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 sudo rgb cycle" OS="Linux" />
+    </Button>
+    <Button Name="KEY_Y">
+      <Action Param="Screens" Function="ModeCycle" OS="Windows" />
+
+      <Action Function="WebRequest" Param="192.168.0.190" KeyCode="/cgi-bin/remote_command.sh?remote=SAMSUNG_AA59-00600A&amp;key=KEY_POWERON" ModeType="Screens" Mode="ScreenTV" OS="Windows" />
+      <Action Function="Run" Param="C:\Windows\System32\DisplaySwitch.exe /internal" ModeType="Screens" Mode="ScreenTV" KeyCode="5000" OS="Windows" />
+      
+      <Action Function="WebRequest" Param="192.168.0.190" KeyCode="/cgi-bin/remote_command.sh?remote=SAMSUNG_AA59-00600A&amp;key=KEY_POWEROFF" ModeType="Screens" Mode="ScreenProjector" OS="Windows" />
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="POWR___1" ModeType="Screens" Mode="ScreenProjector" OS="Windows" />
+      <Action Function="Run" Param="C:\Windows\System32\DisplaySwitch.exe /external" ModeType="Screens" Mode="ScreenProjector" OS="Windows" />
+      
+      <Action Function="WebRequest" Param="192.168.0.190" KeyCode="/cgi-bin/remote_command.sh?remote=SAMSUNG_AA59-00600A&amp;key=KEY_POWERON" ModeType="Screens" Mode="ScreenAll" OS="Windows" />
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="POWR___1" ModeType="Screens" Mode="ScreenAll" OS="Windows" />
+      <Action Function="Run" Param="C:\Windows\System32\DisplaySwitch.exe /extend" ModeType="Screens" Mode="ScreenAll" KeyCode="5000" OS="Windows" />
+    </Button>
+    <Button Name="KEY_X">
+      <Action Function="Run" Param="&quot;c:\Program Files\Kodi\kodi.exe&quot;" OS="Windows" />
+    </Button>
+    <Button Name="KEY_VOLUMEUP">
+      <Action Function="SendVK" KeyCode="VK_VOLUME_UP" OS="Windows" />
+    </Button>
+    <Button Name="KEY_VOLUMEDOWN">
+      <Action Function="SendVK" KeyCode="VK_VOLUME_DOWN" OS="Windows" />
+    </Button>
+    <Button Name="KEY_MUTE">
+      <Action Function="SendVK" KeyCode="VK_VOLUME_MUTE" OS="Windows" />
+    </Button>
+    <Button Name="KEY_PREVIOUS">
+      <Action Function="SendVK" KeyCode="VK_MEDIA_PREV_TRACK" OS="Windows" />
+    </Button>
+    <Button Name="KEY_NEXT">
+      <Action Function="SendVK" KeyCode="VK_MEDIA_NEXT_TRACK" OS="Windows" />
+    </Button>
+    <Button Name="KEY_STOP">
+      <Action Function="SendVK" KeyCode="VK_MEDIA_STOP" OS="Windows" />
+    </Button>
+    <Button Name="KEY_PLAY">
+      <Action Function="SendVK" KeyCode="VK_MEDIA_PLAY_PAUSE" OS="Windows" />
+    </Button>
+    <Button Name="KEY_PAUSE">
+      <Action Function="SendVK" KeyCode="VK_MEDIA_PLAY_PAUSE" OS="Windows" />
+    </Button>
+    <Button Name="KEY_POWERON">
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 nohup sudo rgb on" OS="Linux" />
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="POWR___1" OS="Linux" />
+      <Action Function="WebRequest" Param="192.168.0.190" KeyCode="/cgi-bin/remote_command.sh?remote=LG_AKB72915207&amp;key=KEY_POWERON" OS="Linux" />
+      <Action Function="WebRequest" Param="192.168.0.190" KeyCode="/cgi-bin/remote_command.sh?remote=SAMSUNG_AA59-00600A&amp;key=KEY_POWERON" OS="Linux" />
+    </Button>
+    <Button Name="KEY_POWEROFF">
+      <Action Function="ScreensOff" OS="Windows" />
+      <Action Function="SendPacket" Param="192.168.0.138" KeyCode="POWR___0" OS="Linux" />
+      <Action Function="WebRequest" Param="192.168.0.190" KeyCode="/cgi-bin/remote_command.sh?remote=LG_AKB72915207&amp;key=KEY_POWEROFF" OS="Linux" />
+      <Action Function="WebRequest" Param="192.168.0.190" KeyCode="/cgi-bin/remote_command.sh?remote=SAMSUNG_AA59-00600A&amp;key=KEY_POWEROFF" OS="Linux" />
+      <Action Function="Run" Param="ssh rgb@192.168.0.40 nohup sudo rgb off" OS="Linux" />
+    </Button>
+  </Remote>
 </Config>

@@ -70,7 +70,7 @@ void releaseButton(unsigned int button)
 	sendButtonRelease(button);
 }
 
-void mouseCycleButtons(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void mouseCycleButtons(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	currentButton = (currentButton + 1) % 3;
 	switch (currentButton)
@@ -91,7 +91,7 @@ void mouseCycleButtons(const char* repeat, const char* keycode, const char* para
 
 }
 
-void mouseClick(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void mouseClick(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	if (!(buttonState & (1 << currentButton))) //buttonState is a bitmask for each button, check if the button is not pressed before pressing it.
 	{
@@ -101,7 +101,7 @@ void mouseClick(const char* repeat, const char* keycode, const char* param, cons
 	releaseButton(currentButton);
 }
 
-void mouseHold(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void mouseHold(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	if (!(buttonState & (1 << currentButton)))
 	{
@@ -109,32 +109,32 @@ void mouseHold(const char* repeat, const char* keycode, const char* param, const
 	}
 }
 
-void mouseUp(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void mouseUp(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	sendCursorPosition(0,0 - numRepeat * stepMultiplier, false);
 }
 
-void mouseDown(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void mouseDown(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	sendCursorPosition(0, numRepeat * stepMultiplier, false);
 }
 
-void mouseLeft(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void mouseLeft(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	sendCursorPosition(0 - numRepeat * stepMultiplier, 0, false);
 }
 
-void mouseRight(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void mouseRight(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	sendCursorPosition(numRepeat * stepMultiplier, 0, false);
 }
 
-void scrollUp(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void scrollUp(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	sendScroll(numRepeat);
 }
 
-void scrollDown(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void scrollDown(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	sendScroll(-numRepeat);
 }

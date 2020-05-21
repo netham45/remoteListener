@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Configs_h
+#define __Configs_h
 
 #include "RemoteListener.h"
 #include <string>
@@ -6,6 +7,8 @@
 
 void cacheDoc();
 void runActionsForDeviceButton(const char* deviceName, const char* buttonName, int numRepeat);
-std::vector<std::string> getModes();
-PCSTR getServer();
-PCSTR getPort();
+std::vector<std::string> getModes(const char* modeClass);
+const char* getServer();
+const char* getPort();
+
+#endif

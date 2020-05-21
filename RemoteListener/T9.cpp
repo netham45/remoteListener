@@ -21,7 +21,7 @@ HDC hDC;
 HGDIOBJ font;
 HFONT hFontOld;
 
-void t9(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void t9(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	int key = atoi(keycode);
 	if (numRepeat > 0 && numRepeat % 5 != 0) //Don't send keys as fast as the remote sends input
@@ -43,13 +43,13 @@ void t9(const char* repeat, const char* keycode, const char* param, const char* 
 	drawText(buffer);
 }
 
-void t9send(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void t9send(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	SendKeys(buffer);
 	clear();
 }
 
-void t9back(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void t9back(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	if (strlen(buffer) > 0)
 	{
@@ -62,7 +62,7 @@ void t9back(const char* repeat, const char* keycode, const char* param, const ch
 	drawText(buffer);
 }
 
-void t9clear(const char* repeat, const char* keycode, const char* param, const char* mode, int numRepeat)
+void t9clear(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	clear();
 }
@@ -96,13 +96,14 @@ void initializeT9Form()
 				WS_POPUP,
 				0,
 				0,
-				GetSystemMetrics(SM_CXSCREEN),
-				GetSystemMetrics(SM_CYSCREEN),
+				GetSystemMetrics(SM_CXFULLSCREEN),
+				GetSystemMetrics(SM_CYFULLSCREEN),
 				NULL,
 				NULL,
 				NULL,
 				NULL);
-			SetWindowLong(windowHandle, GWL_EXSTYLE, GetWindowLong(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW);
+			SetWindowPos(windowHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+			SetWindowLong(windowHandle, GWL_EXSTYLE, GetWindowLong(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOPMOST);
 			SetLayeredWindowAttributes(windowHandle,
 				RGB(255, 255, 255),
 				255,
@@ -136,7 +137,9 @@ void drawText(const char* _text)
 	else
 	{
 		text = StringToLPCWSTR(_text);
-		InvalidateRect(windowHandle, NULL, TRUE);
+		//InvalidateRect(windowHandle, NULL, TRUE);
+		HDC hdc = GetDC(windowHandle);
+		Rectangle(hdc, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 		PostMessage(windowHandle, WM_PAINT, 2, 0);
 	}
 }
@@ -156,11 +159,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 
 	switch (message)
 	{
-	case WM_CHAR: //this is just for a program exit besides window's borders/task bar
-		if (wparam == VK_ESCAPE)
-		{
-			DestroyWindow(hwnd);
-		}
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
@@ -175,8 +173,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 		else if (wparam == 2) //2 for show
 		{
 			lastTS = GetTickCount64();
-			ShowWindow(windowHandle, SW_MAXIMIZE);
-			DrawText(hDC, text, wcslen(text), &dest, DT_SINGLELINE | DT_NOCLIP);
+			ShowWindow(windowHandle, SW_NORMAL);
+			SetWindowPos(windowHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+			SetWindowLong(windowHandle, GWL_EXSTYLE, GetWindowLong(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOPMOST);
+			DrawText(hDC, text, wcslen(text), &dest, 0);
 			CreateThread(nullptr, 0, [](void*) -> DWORD
 				{
 					Sleep(5000);
