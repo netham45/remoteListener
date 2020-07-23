@@ -10,5 +10,5 @@ void runActionsForDeviceButton(const char* deviceName, const char* buttonName, i
 std::vector<std::string> getModes(const char* modeClass);
 const char* getServer();
 const char* getPort();
-
+const bool getConsoleEnabled();
 #endif

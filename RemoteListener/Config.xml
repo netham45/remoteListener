@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Config>
   <Server Host="192.168.0.82" Port="8765" />
+  <Console Enabled="0" />
   <Modes Name="Input">
     <Mode Name="Mouse" />
     <Mode Name="Keyboard" />
@@ -17,6 +18,12 @@
   <Modes Name="AltTabPriorInput">
     <Mode Name="Mouse" />
     <Mode Name="Keyboard" />
+  </Modes>
+  <Modes Name="Lights">
+    <Mode Name="Light4" />
+	<Mode Name="Light5" />
+	<Mode Name="Light45" />
+	<Mode Name="LightOff" />
   </Modes>
   <Remote Name="LED_44_KEY">
     <Button Name="RED_UP">
@@ -249,7 +256,18 @@
       <Action Function="SendVK" KeyCode="VK_BACK" OS="Windows" />
     </Button>
     <Button Name="KEY_INFO">
-      <Action Function="WebRequest" Param="192.168.0.18" KeyCode="/toggleBoth.php" OS="Linux" />
+			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="light.php?light=4&amp;state=1" OS="Linux" ModeType="Lights" Mode="Light4" />
+			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="light.php?light=5&amp;state=0" OS="Linux" ModeType="Lights" Mode="Light4" />
+		    <Action Function="ModeSet" KeyCode="Lights" Param="Light5" ModeType="Lights" Mode="Light4" OS="Linux" />
+			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="light.php?light=4&amp;state=0" OS="Linux" ModeType="Lights" Mode="Light5" />
+			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="light.php?light=5&amp;state=1" OS="Linux" ModeType="Lights" Mode="Light5" />
+		    <Action Function="ModeSet" KeyCode="Lights" Param="Light45" ModeType="Lights" Mode="Light5" OS="Linux" />
+			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="light.php?light=5&amp;state=1" OS="Linux" ModeType="Lights" Mode="Light45" />
+			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="light.php?light=5&amp;state=1" OS="Linux"  ModeType="Lights" Mode="Light45" />
+		    <Action Function="ModeSet" KeyCode="Lights" Param="LightOff" ModeType="Lights" Mode="Light45" OS="Linux" />
+			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="light.php?light=4&amp;state=0" OS="Linux" ModeType="Lights" Mode="LightOff"  />
+			<Action Function="WebRequest" Param="192.168.0.18" KeyCode="light.php?light=5&amp;state=0" OS="Linux"  ModeType="Lights" Mode="LightOff" />
+		    <Action Function="ModeSet" KeyCode="Lights" Param="Light4" ModeType="Lights" Mode="LightOff" OS="Linux" />
     </Button>
     <Button Name="XboxFancyButton">
       <Action Function="ModeSet" KeyCode="AltTab" Param="Active" OS="Windows" />

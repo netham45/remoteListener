@@ -5,10 +5,12 @@
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
+#pragma comment (lib, "Wtsapi32.lib")
 #define HOSTOS "Windows"
 #include <WinSock2.h>
 #include <ws2tcpip.h>
 #include <Windows.h>
+#include <WtsApi32.h>
 #elif __linux__
 #define HOSTOS "Linux"
 #include <sys/socket.h>

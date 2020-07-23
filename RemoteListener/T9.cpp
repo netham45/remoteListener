@@ -13,7 +13,7 @@ int lastKey = 0;
 
 HWND windowHandle = 0;
 LPCWSTR text = L"";
-unsigned long lastTS = 0;
+ULONGLONG lastTS = 0;
 bool isShowing = false;
 
 RECT dest;
@@ -165,7 +165,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 	case WM_PAINT:
 		if (wparam == 1) //1 for hide
 		{
-			if (lastTS + 4500 < GetTickCount64())
+			if (lastTS + (ULONGLONG)4500 < GetTickCount64())
 			{
 				ShowWindow(windowHandle, SW_HIDE);
 			}
@@ -176,7 +176,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 			ShowWindow(windowHandle, SW_NORMAL);
 			SetWindowPos(windowHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 			SetWindowLong(windowHandle, GWL_EXSTYLE, GetWindowLong(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOPMOST);
-			DrawText(hDC, text, wcslen(text), &dest, 0);
+			DrawText(hDC, text, (int)wcslen(text), &dest, 0);
 			CreateThread(nullptr, 0, [](void*) -> DWORD
 				{
 					Sleep(5000);

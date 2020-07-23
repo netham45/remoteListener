@@ -154,3 +154,17 @@ const char* getPort()
 					return attr->value();
 	return "0";
 }
+
+const bool getConsoleEnabled()
+{
+	cacheDoc();
+	xml_node<>* pRoot = cachedDoc.first_node();
+
+	for (xml_node<>* pServer = pRoot->first_node(); pServer; pServer = pServer->next_sibling()) //For Each State
+		if (strcmp(pServer->name(), "Console") == 0)
+			for (xml_attribute<>* attr = pServer->first_attribute(); //Check each attribute
+				attr; attr = attr->next_attribute())
+				if (strcmp(attr->name(), "Enabled") == 0)
+					return atoi(attr->value()) > 0;
+	return true;
+}
