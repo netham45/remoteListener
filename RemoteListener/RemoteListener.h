@@ -16,6 +16,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <unistd.h>
+#include <cstring>
 #define SA struct sockaddr 
 #endif
 #include <iostream>
@@ -25,3 +27,4 @@
 constexpr auto DEFAULT_BUFLEN = 2048;
 constexpr auto HELO = "VERSION\n";
 #endif
+

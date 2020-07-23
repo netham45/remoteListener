@@ -116,14 +116,30 @@ std::vector<std::string> getModes(const char* modeClass)
 	cacheDoc();
 	xml_node<>* pRoot = cachedDoc.first_node();
 	for (xml_node<>* pModes = pRoot->first_node(); pModes; pModes = pModes->next_sibling()) //For Each State
+	{
 		if (strcmp(pModes->name(), "Modes") == 0)
+		{
 			for (xml_attribute<>* attr = pModes->first_attribute(); attr; attr = attr->next_attribute())
+			{
 				if (strcmp(attr->name(), "Name") == 0)
+				{
 					if (strcmp(attr->value(),modeClass) == 0)
+					{
 						for (xml_node<>* pMode = pModes->first_node(); pMode; pMode = pMode->next_sibling()) //For Each State
+						{
 							for (xml_attribute<>* attr = pMode->first_attribute(); attr; attr = attr->next_attribute())
+							{
 								if (strcmp(attr->name(), "Name") == 0)
+								{
 									modes.push_back(attr->value());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	return modes;
 }
 

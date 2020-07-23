@@ -15,7 +15,10 @@ void cycleMode(const char* repeat, const char* keycode, const char* param, const
 	currentMode = getMode(param);
 	vector<string> Modes = getModes(param);
 	if (currentMode.compare("") == 0)
+	{
+		printf("currentMode unset, setting to %s\n",Modes[0].c_str());
 		currentMode = Modes[0];
+	}
 	else
 		for (unsigned int i = 0; i < Modes.size(); i++)
 			if (currentMode.compare(Modes[i]) == 0)

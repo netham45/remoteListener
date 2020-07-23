@@ -12,7 +12,11 @@ void run(const char* repeat, const char* keycode, const char* param, const char*
 {
 	if (strcmp(keycode, "D") != 0)
 	{
+#ifdef _WIN32
 		Sleep(atoi(keycode));
+#elif __linux__
+		sleep(atoi(keycode));
+#endif
 	}
 #ifdef _WIN32
 	STARTUPINFO si;
@@ -134,3 +138,4 @@ void registerMiscActions()
 #endif
 	registerActionCallback(&webRequest, "WebRequest");
 }
+

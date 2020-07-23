@@ -102,7 +102,7 @@ void registerActionCallbacks()
 	registerMouseActions();
 	registerT9Actions();
 	registerKeyboardActions();
-	registerModeActions();
 #endif
+	registerModeActions();
 	registerMiscActions();
 }
