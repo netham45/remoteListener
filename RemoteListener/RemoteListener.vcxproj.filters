@@ -98,8 +98,20 @@
     <ClInclude Include="Misc.h">
       <Filter>Source Files\Outputs</Filter>
     </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="base64.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="Config_lirc.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
+    <Xml Include="Config_magic4pc.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
     <Xml Include="Config.xml">
       <Filter>Resource Files</Filter>
     </Xml>

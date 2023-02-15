@@ -1,10 +1,15 @@
 #include "messageParser.h"
 #include "Configs.h"
 #include <string.h>
+#include "json.hpp"
+#include "Mouse.h"
+#include "base64.h"
 
+using namespace std;
+using json = nlohmann::json;
 int parsedVersion = 0;
 
-void parseMessage(char* message, unsigned int messageLen)
+void lirc_parseMessage(char* message, unsigned int messageLen)
 {
 	char button[DEFAULT_BUFLEN] = { 0 };
 	char device[DEFAULT_BUFLEN] = { 0 };
@@ -63,5 +68,80 @@ void parseMessage(char* message, unsigned int messageLen)
 	if (strlen(device) && strlen(button))
 	{
 		runActionsForDeviceButton(device, button, repeat);
+	}
+}
+
+uint8_t magicButtonsRepeat[2048] = { 0 };
+
+void magic4pc_parseMessage(char* message, unsigned int messageLen, SOCKET ConnectSocket)
+{
+#ifdef _WIN32
+	/*printf("Got data for magic4pc\n");
+	for (int i=0;i<messageLen;i++)
+		printf("%c",message[i]);*/
+	message[messageLen] = 0;
+	json data = json::parse(message);
+	string type = data["t"].get<string>();
+	if (type == "keepalive")
+	{
+		send(ConnectSocket, "{}", strlen("{}"), 0);
+	}
+	else if (type == "remote_update")
+	{
+		string payload = data["payload"].get<string>();
+		string output;
+		int xy[2];
+		macaron::Base64::Decode(payload, output);
+		memcpy(xy, output.c_str(), sizeof(xy));
+		int x = xy[0];
+		int y = xy[1];
+		int fixedx = (int)((double)x * 34.2403343783); // 0-1914 -> 0-65535
+		int fixedy = (int)((double)y * 61.0204841713); // 0-1074 -> 0-65535
+		sendCursorPosition(fixedx, fixedy, true);
+	}
+	else if (type == "input")
+	{
+		bool isPressed = data["parameters"]["isDown"].get<bool>();
+		int keyCode = data["parameters"]["keyCode"].get<int>();
+		if (isPressed)
+		{
+			char name[32];
+			sprintf(name, "%i", keyCode);
+			runActionsForDeviceButton("magic4pc",name, magicButtonsRepeat[keyCode]);
+			sprintf(name, "%i_down", keyCode);
+			runActionsForDeviceButton("magic4pc", name, magicButtonsRepeat[keyCode]++);
+		}
+		else
+		{
+			char name[32];
+			sprintf(name, "%i_up", keyCode);
+			runActionsForDeviceButton("magic4pc", name, magicButtonsRepeat[keyCode]);
+			magicButtonsRepeat[keyCode] = 0;
+		}
+	}
+	else if (type == "mouse")
+	{
+		runActionsForDeviceButton("magic4pc", data["mouse"]["type"].get<string>().c_str(), 0);
+	}
+	else if (type == "wheel")
+	{
+		int delta = data["wheel"]["delta"].get<int>();
+		printf("Delta: %i\n", delta);
+		runActionsForDeviceButton("magic4pc", delta > 0 ? "wheelup" : "wheeldown", abs(delta) / 60);
+	}
+#endif
+}
+
+
+void parseMessage(char* message, unsigned int messageLen, SOCKET ConnectSocket)
+{
+	const char* type = getType();
+	if (_stricmp(type, "lirc") == 0)
+	{
+		lirc_parseMessage(message, messageLen);
+	}
+	else if (_stricmp(type, "magic4pc") == 0)
+	{
+		magic4pc_parseMessage(message, messageLen, ConnectSocket);
 	}
 }

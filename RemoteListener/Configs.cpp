@@ -171,6 +171,20 @@ const char* getPort()
 	return "0";
 }
 
+const char* getType()
+{
+	cacheDoc();
+	xml_node<>* pRoot = cachedDoc.first_node();
+
+	for (xml_node<>* pServer = pRoot->first_node(); pServer; pServer = pServer->next_sibling()) //For Each State
+		if (strcmp(pServer->name(), "Server") == 0)
+			for (xml_attribute<>* attr = pServer->first_attribute(); //Check each attribute
+				attr; attr = attr->next_attribute())
+				if (strcmp(attr->name(), "Type") == 0)
+					return attr->value();
+	return "0";
+}
+
 const bool getConsoleEnabled()
 {
 	cacheDoc();

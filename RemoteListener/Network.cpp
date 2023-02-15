@@ -1,18 +1,23 @@
 
 #include "Network.h"
 #include "messageParser.h"
+
 #ifdef __linux__
 #include <strings.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #endif
-int start(const char* server, const char* port)
+#include <thread>
+
+int start(const char* server, const char* port, const char* type)
 {
 #ifdef _WIN32
 	u_long iMode = 0;
 	while (1)
 	{
+		bool isMagic4PC = _stricmp(type,"magic4pc") == 0;
+
 		WSADATA wsaData;
 		SOCKET ConnectSocket = INVALID_SOCKET;
 		struct addrinfo* result = NULL,
@@ -22,6 +27,7 @@ int start(const char* server, const char* port)
 		int iResult;
 		unsigned int recvbuflen = DEFAULT_BUFLEN;
 		int parsedVersion = 0;
+		bool isAlive = false;
 
 		// Initialize Winsock
 		iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -32,8 +38,8 @@ int start(const char* server, const char* port)
 
 		ZeroMemory(&hints, sizeof(hints));
 		hints.ai_family = AF_UNSPEC;
-		hints.ai_socktype = SOCK_STREAM;
-		hints.ai_protocol = IPPROTO_TCP;
+		hints.ai_socktype = isMagic4PC?SOCK_DGRAM:SOCK_STREAM;
+		hints.ai_protocol = isMagic4PC?IPPROTO_UDP:IPPROTO_TCP;
 
 		// Resolve the server address and port
 
@@ -71,7 +77,7 @@ int start(const char* server, const char* port)
 		freeaddrinfo(result);
 
 		// Send an initial buffer
-		iResult = send(ConnectSocket, HELO, (int)strlen(HELO), 0);
+		iResult = send(ConnectSocket, isMagic4PC?MAGIC4PC_SUBSCRIBE:HELO, (int)strlen(isMagic4PC?MAGIC4PC_SUBSCRIBE:HELO), 0);
 		if (iResult == SOCKET_ERROR) {
 			printf("send failed with error: %d\n", WSAGetLastError());
 			closesocket(ConnectSocket);
@@ -85,20 +91,54 @@ int start(const char* server, const char* port)
 			return 1;
 		}
 
-		// Receive until the peer closes the connection
-		do {
+		fd_set fds;
+		FD_ZERO(&fds);
+		FD_SET(ConnectSocket, &fds);
 
-			iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-			if (iResult > 0)
-			{
-					parseMessage(recvbuf, iResult);
+		timeval timeout;
+		timeout.tv_sec = 30;
+		timeout.tv_usec = 0;
+		while (1)
+		{
+			iResult = select(0, &fds, NULL, NULL, &timeout);
+			if (iResult == 0) {
+				// Timeout occurred
+				if (isMagic4PC)
+				{
+					printf("Timeout occurred\n");
+
+					iResult = send(ConnectSocket, isMagic4PC ? MAGIC4PC_SUBSCRIBE : HELO, (int)strlen(isMagic4PC ? MAGIC4PC_SUBSCRIBE : HELO), 0);
+					if (iResult == SOCKET_ERROR) {
+						printf("send failed with error: %d\n", WSAGetLastError());
+						closesocket(ConnectSocket);
+						WSACleanup();
+						return 1;
+					}
+				}
 			}
-			else if (iResult == 0)
-				printf("Connection closed\n");
-			else
-				printf("recv failed with error: %d\n", WSAGetLastError());
+			else if (iResult == SOCKET_ERROR) {
+				// Error occurred
+				printf("select failed with error: %d\n", WSAGetLastError());
+				return 1;
+			}
+			else {
+				// There is data to receive
+				iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+				if (iResult > 0)
+				{
+					isAlive = true;
+					parseMessage(recvbuf, iResult, ConnectSocket);
+				}
+				else if (iResult == 0)
+					printf("Connection closed\n");
+				else
+				{
+					printf("recv failed with error: %d\n", WSAGetLastError());
+					return 1;
+				}
 
-		} while (iResult > 0);
+			}
+		}
 
 		// cleanup
 		closesocket(ConnectSocket);

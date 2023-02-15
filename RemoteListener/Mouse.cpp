@@ -101,6 +101,16 @@ void mouseClick(const char* repeat, const char* keycode, const char* param, cons
 	releaseButton(currentButton);
 }
 
+void mouseClickDown(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
+{
+	pressButton(currentButton);
+}
+
+void mouseClickUp(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
+{
+	releaseButton(currentButton);
+}
+
 void mouseHold(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
 	if (!(buttonState & (1 << currentButton)))
@@ -150,5 +160,7 @@ void registerMouseActions()
 	registerActionCallback(&scrollUp, "ScrollUp");
 	registerActionCallback(&scrollDown, "ScrollDown");
 	registerActionCallback(&mouseClick, "MouseClick");
+	registerActionCallback(&mouseClickDown, "MouseClickDown");
+	registerActionCallback(&mouseClickUp, "MouseClickUp");
 	registerActionCallback(&mouseHold, "MouseHold");
 }

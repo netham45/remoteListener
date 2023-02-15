@@ -71,8 +71,12 @@ int main()
 
 #endif
 	registerActionCallbacks();
-	printf("Connecting To %s:%s\n", getServer(), getPort());
-	start(getServer(), getPort());
+	while (1)
+	{
+		printf("Connecting To %s:%s\n", getServer(), getPort());
+		start(getServer(), getPort(), getType());
+		Sleep(5000);
+	}
 #ifdef WIN32
 	ReleaseMutex(hMutexHandle);
 	CloseHandle(hMutexHandle);

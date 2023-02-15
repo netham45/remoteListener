@@ -1,6 +1,7 @@
-This is an application that connects to a remote LIRC server and translates the remote buttons it receives into actions on a client. There are project files are for Visual Studio 2019 Community Edition as well as a Linux Makefile.
+This is an application that connects to either a remote LIRC server or a remote Magic4PC server and translates the remote buttons it receives into actions on a client. There are project files are for Visual Studio 2019 Community Edition as well as a Linux Makefile.
 
-The Config.xml file holds a sample remote layout.
+The Config_lirc.xml file holds a sample LIRC remote layout.
+The Config_magic4pc.xml file holds a sample magic4pc remote layout.
 
 
 Valid actions:
@@ -16,6 +17,8 @@ Valid actions:
 | ScrollUp | N/A | N/A | Scrolls Mouse Wheel up †|
 | ScrollDown | N/A | N/A | Scrolls Mouse Wheel down †|
 | MouseClick | N/A | N/A | Clicks Mouse †|
+| MouseClickDown | N/A | N/A | Presses Mouse †|
+| MouseClickUp | N/A | N/A | Releases Mouse †|
 | MouseHold | N/A | N/A | Holds Mouse Click †|
 | t9 | 0-9 | N/A | Presses a T9 key †|
 | t9Send| N/A | N/A | Sends the current T9 string †|
@@ -32,22 +35,29 @@ Valid actions:
 | ProjectorPowerToggle | N/A | Host IP | Queries an EIKI EIP-U4700 projector and toggles it's power state. May work on other projectors.
 
 
-
 †Emulating the keyboard/mouse is Windows only.
 
-There are three additional parameters, Mode, ModeType and Repeat. These can be used on any action.
+There are additional parameters, Mode, ModeType, Repeat, and OS. These can be used on any action.
 If Mode is specified the action will only run if the ModeType is in the right mode, such as only running if Input is in Keyboard mode. Additional modes can be added under the Modes section, additional ModeTypes can be added by adding additional Modes sections.
 
-If Repeat is specified it will only run on that repeat. For example, MouseHold is ran after 5 repeats indicating the remote has been held for a couple of seconds.
+If Repeat is specified it will only run on that repeat. For example, in the LIRC configuration MouseHold is ran after 5 repeats indicating the remote has been held for a couple of seconds.
 Repeat by default skips the 1st and 2nd repeats to avoid bouncing. Repeat can be set to 'A' to always run.
 
-The Button Name is the name of the button passed from LIRC, the Device Name is the name of the device. The included configuration works with an Xbox 360 remote. I test with a universal remote so it may not fit a real one perfectly.
+The Button Name is the name of the button passed from LIRC or the button ID from Magic4PC, the Device Name is the name of the device.
 
-The server config is also in the Config.xml.
+OS can be either not provided to always run, or set to 'Windows' or 'Linux'.
+
+Magic4PC will also fire additional events, such as 13_up, for when the button is released. It also fires mousedown and mouseup actions for when the mouse is clicked, and wheeldown and wheelup actions for when the wheel is scrolled.
+
+The server config is in the Config.xml.
 
 There is no limit on the number of devices, number of buttons per device, or number of actions per button. There is also no limit on the number of modes or mode types.
 
 This project uses RapidXML for it's XML parsing. See http://rapidxml.sourceforge.net/ for more information. I haven't modified RapidXML at all.
+
+This project uses nlohmann json https://github.com/nlohmann/json
+
+This project uses this random base64 library for base64: https://gist.github.com/tomykaira/f0fd86b6c73063283afe550bc5d77594
 
 T9 works like T9 on a phone. Here are the T9 keys:
 ```

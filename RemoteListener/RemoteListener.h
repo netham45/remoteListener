@@ -26,5 +26,6 @@
 
 constexpr auto DEFAULT_BUFLEN = 2048;
 constexpr auto HELO = "VERSION\n";
+constexpr auto MAGIC4PC_SUBSCRIBE = "{\"t\": \"sub_sensor\", \"updateFreq\" : 33, \"filter\" : [\"coordinate\"]}";
 #endif
 
