@@ -55,7 +55,9 @@ string getMode(const char* modeType)
 	else
 	{
 		vector<string> Modes = getModes(modeType);
-		return Modes[0];
+		if (Modes.size() > 0)
+			return Modes[0];
+		return "";
 	}
 }
 
