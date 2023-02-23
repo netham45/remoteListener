@@ -1,4 +1,4 @@
-This is an application that connects to either a remote LIRC server or a remote Magic4PC server and translates the remote buttons it receives into actions on a client. There are project files are for Visual Studio 2019 Community Edition as well as a Linux Makefile.
+This is an application that connects to either a remote LIRC server or a remote Magic4PC server and translates the remote buttons it receives into actions on a client. There are project files are for Visual Studio 2019 Community Edition as well as a Linux Makefile. Linux support needs updated and is probably broken right now.
 
 The Config_lirc.xml file holds a sample LIRC remote layout.
 The Config_magic4pc.xml file holds a sample magic4pc remote layout.
