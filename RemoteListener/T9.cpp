@@ -2,10 +2,13 @@
 #include "T9.h"
 #include "Keyboard.h"
 #include <strsafe.h>
+#include "wordlist.h"
 
-const char* t9keys[] = { " ,.0?!'\\`\":;", "@*1/-+=#$%^&~|(){}[]", "abc2ABC", "def3DEF", "ghi4GHI", "jkl5JKL", "mno6MNO", "pqrs7PRQS", "tuv8TUV", "wxyz9WXYZ" };
+const char* phoneKeys[] = { " ,.0?!'\\`\":;", "@*1/-+=#$%^&~|(){}[]", "abc2ABC", "def3DEF", "ghi4GHI", "jkl5JKL", "mno6MNO", "pqrs7PRQS", "tuv8TUV", "wxyz9WXYZ" };
 
-char buffer[1024] = { 0 };
+char textBuffer[1024] = { 0 };
+
+char phoneKeyBuffer[1024];
 
 time_t lastPressTime = 0;
 int keyIndex = 0;
@@ -15,7 +18,10 @@ int lastKey = -1;
 HWND windowHandle = 0;
 LPCWSTR text = L"";
 LPCWSTR hintText = L"";
+std::string hintTextStr = "";
 int hintTextIndex = 0;
+int hintTextLength = 0;
+int t9WordIndex = 0;
 ULONGLONG lastTS = 0;
 bool isShowing = false;
 
@@ -25,35 +31,144 @@ HDC hDC;
 HGDIOBJ font;
 HGDIOBJ hintFont;
 HFONT hFontOld;
+#define T9_MAX_NUMBERS 32
+char t9Numbers[T9_MAX_NUMBERS];
 
-void t9(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
+int t9getNumbersLen()
 {
-	int key = atoi(keycode);
-	if (numRepeat > 0 && numRepeat % 5 != 0) //Don't send keys as fast as the remote sends input
-		return;
+	for (int i = 0; i < T9_MAX_NUMBERS; i++)
+	{
+		if (t9Numbers[i] == 0)
+			return i;
+	}
+	return -1;
+}
+
+void findT9Word()
+{
+	char buffer[T9_MAX_NUMBERS];
+	for (int i = 0; i < T9_MAX_NUMBERS; i++)
+	{
+		if (t9Numbers[i] != 0)
+		{
+			sprintf_s(buffer+i, 2, "%i", t9Numbers[i]);
+		}
+		else
+		{
+			buffer[i] = 0;
+			break;
+		}
+	}
+	Node *wordNode = search(buffer, rootWordNode);
+	hintTextStr = "";
+	if (lastKey != -1)
+		hintTextStr = phoneKeys[lastKey];
+	int i = 0;
+	Node* selectedNode = 0;
+	Node *phoneKeyNode = new Node();
+	phoneKeyNode->word = phoneKeyBuffer;
+	phoneKeyNode->next = 0;
+	phoneKeyNode->children = {0};
+
+	Node* Children[31] = { 0 };
+	int start = 0;
+	if (strlen(phoneKeyNode->word) > 0)
+	{
+		Children[0] = phoneKeyNode;
+	}
+	else
+	{
+		start = 1;
+	}
+	getTenChildrenWithWords(wordNode, &Children[1]);
+	int lastIndex = 0;
+	for (int i = start; i < 30; i++)
+	{
+		Node* currentNode = Children[i];
+		if (currentNode && currentNode->word)
+		{
+			lastIndex = i;
+		}
+	}
+	if (t9WordIndex > lastIndex)
+		t9WordIndex = lastIndex;
+	for (int i = start; i < 30; i++)
+	{
+		Node* currentNode = Children[i];
+		if (!currentNode)
+			continue;
+		if (currentNode && currentNode->word)
+		{
+			printf("currentNode: %s\n", currentNode->word);
+			if (i == t9WordIndex)
+			{
+				hintTextIndex = hintTextStr.length() + 1;
+				hintTextLength = strlen(currentNode->word);
+				selectedNode = currentNode;
+			}
+			hintTextStr = hintTextStr + " " + currentNode->word;
+		}
+	}
+	if (selectedNode && selectedNode->word) {
+
+		strcpy_s(textBuffer,sizeof(textBuffer), selectedNode->word);
+	}
+	else if (strlen(phoneKeyBuffer))
+	{
+		sprintf_s(textBuffer, sizeof(textBuffer), "%s", phoneKeyBuffer);
+	}
+	else
+	{
+		selectedNode = Children[1];
+		if (selectedNode && selectedNode->word)
+		  strcpy_s(textBuffer, sizeof(textBuffer), selectedNode->word);
+	}
+
+	if (hintTextIndex > 12)
+	{
+		hintTextStr = hintTextStr.substr(hintTextIndex - 12);
+		hintTextIndex = 12;
+	}
+}
+
+void phoneKey(uint8_t key)
+{
 	time_t currentTime = time(NULL);
 	double seconds = difftime(currentTime, lastPressTime); //Get the time since the last keypress
-	lastPressTime = currentTime;
-	if (seconds < 2 && strlen(buffer) > 0 && lastKey == key)
+	if (seconds < 2 && strlen(phoneKeyBuffer) > 0 && lastKey == key)
 	{
-		++keyIndex %= strlen(t9keys[key]); //Cycle through characters in the string
-		buffer[strlen(buffer) - 1] = t9keys[key][keyIndex]; //And set the last character of the buffer to the string
+		++keyIndex %= strlen(phoneKeys[key]); //Cycle through characters in the string
+		phoneKeyBuffer[strlen(phoneKeyBuffer) - 1] = phoneKeys[key][keyIndex]; //And set the last character of the buffer to the string
 	}
 	else
 	{
 		keyIndex = 0;
-		buffer[strlen(buffer)] = t9keys[key][0]; //Add to the end of the buffer
+		phoneKeyBuffer[strlen(phoneKeyBuffer)] = phoneKeys[key][0]; //Add to the end of the buffer
 	}
 	lastKey = key;
-	drawText(buffer);
-	drawHintText(t9keys[key], keyIndex);
+}
+
+void t9(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
+{
+	if (numRepeat > 0 && numRepeat % 5 != 0) //Don't send keys as fast as the remote sends input
+		return;
+	t9WordIndex = 0;
+	int key = atoi(keycode);
+	phoneKey(key);
+	lastPressTime = time(NULL);
+	if (t9getNumbersLen() < T9_MAX_NUMBERS)
+	    t9Numbers[t9getNumbersLen()] = key;	
+	findT9Word();
+	drawText(textBuffer);
+	drawHintText(hintTextStr.c_str(), keyIndex, 1);
 }
 
 void t9send(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
-	if (strlen(buffer) > 0)
+	if (strlen(textBuffer) > 0)
 	{
-		SendKeys(buffer);
+		SendKeys(textBuffer);
+		SendKey(VK_SPACE);
 		clear();
 	}
 	else
@@ -64,18 +179,65 @@ void t9send(const char* repeat, const char* keycode, const char* param, const ch
 
 void t9back(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
-	if (strlen(buffer) > 0)
+	lastKey = -1;
+	if (t9getNumbersLen() > 0 || strlen(phoneKeyBuffer) > 0)
 	{
-		buffer[strlen(buffer) - 1] = 0; //Zero out the last character to backspace
 		lastPressTime = time(NULL);
+		if (t9getNumbersLen() > 0)
+		{
+			t9Numbers[t9getNumbersLen() - 1] = 0;			
+		}
+		if (strlen(phoneKeyBuffer) > 0)
+		{
+			phoneKeyBuffer[strlen(phoneKeyBuffer) - 1] = 0; //Zero out the last character to backspace
+		}
+		findT9Word();
+		drawText(textBuffer);
+		drawHintText(hintTextStr.c_str(), keyIndex, 1);
 	}
 	else
 	{
-		SendVK(VK_BACK);
+		drawText("");
+		drawHintText("", 0, 0);
+		SendKey(VK_BACK);
 	}
-	lastKey = -1;
-	drawHintText("", 0);
-	drawText(buffer);
+}
+
+void t9NextWord(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
+{
+	if (t9getNumbersLen() == 0 && strlen(phoneKeyBuffer) == 0)
+	{
+		SendVK(VK_RIGHT);
+		return;
+	}
+	lastPressTime = time(NULL);
+	t9WordIndex++;
+	int index = t9WordIndex;
+	findT9Word();
+
+	drawText(textBuffer);
+	drawHintText(hintTextStr.c_str(), keyIndex, 1);
+}
+
+void t9PrevWord(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
+{
+	if (t9getNumbersLen() == 0 && strlen(phoneKeyBuffer) == 0)
+	{
+		SendVK(VK_LEFT);
+		return;
+	}
+	lastPressTime = time(NULL);
+	t9WordIndex--;
+	if (t9WordIndex < 0)
+	{
+		t9WordIndex = 0;
+	}
+	else
+	{
+		findT9Word();
+		drawText(textBuffer);
+	}
+	drawHintText(hintTextStr.c_str(), keyIndex, 1);
 }
 
 void t9clear(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
@@ -85,9 +247,14 @@ void t9clear(const char* repeat, const char* keycode, const char* param, const c
 
 void clear()
 {
-	memset(buffer, 0, sizeof(buffer));
-	drawText(buffer);
-	drawHintText(buffer,0);
+	for (int i = 0; i < T9_MAX_NUMBERS; i++)
+	{
+		t9Numbers[i] = 0;
+	}
+	memset(phoneKeyBuffer, 0, sizeof(phoneKeyBuffer));
+	memset(textBuffer, 0, sizeof(textBuffer));
+	drawText(textBuffer);
+	drawHintText(textBuffer,0, 1);
 }
 
 void initializeT9Form()
@@ -148,7 +315,7 @@ void initializeT9Form()
 		nullptr, 0, nullptr);
 }
 
-void drawHintText(const char* _text, int highlightIndex)
+void drawHintText(const char* _text, int highlightIndex, int highlightLength)
 {
 	if (strlen(_text) == 0)
 	{
@@ -156,7 +323,6 @@ void drawHintText(const char* _text, int highlightIndex)
 	}
 	else
 	{
-		hintTextIndex = highlightIndex;
 		hintText = StringToLPCWSTR(_text);
 		HDC hdc = GetDC(windowHandle);
 		PostMessage(windowHandle, WM_PAINT, 2, 0);
@@ -228,10 +394,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 				hintDest.left = 0;
 				DrawText(hDC, hintText, (int)wcslen(hintText), &hintDest, 0);
 				SetTextColor(hDC, RGB(200, 60, 35));
-				SIZE sz;
-				GetTextExtentPoint32(hDC, hintText, hintTextIndex, &sz);
-				hintDest.left = sz.cx;
-				DrawText(hDC, &hintText[hintTextIndex], 1, &hintDest, 0);
+
+				if (hintTextIndex < wcslen(hintText))
+				{
+					SIZE sz;
+					GetTextExtentPoint32(hDC, hintText, hintTextIndex, &sz);
+					hintDest.left = sz.cx;
+					DrawText(hDC, &hintText[hintTextIndex], hintTextLength, &hintDest, 0);
+				}
 			}
 			SelectObject(hDC, font);
 			SetTextColor(hDC, RGB(50, 230, 70));
@@ -258,10 +428,24 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 	return 0;
 }
 
+void buildWordList()
+{
+	rootWordNode = makeNode();
+
+	for (int i = 0; i < WORDLIST_LEN; i++)
+	{
+		insert(rootWordNode, WORDLIST[i]);
+	}
+	clear();
+}
+
 void registerT9Actions()
 {
+	buildWordList();
 	registerActionCallback(&t9, "t9");
 	registerActionCallback(&t9send, "t9Send");
 	registerActionCallback(&t9back, "t9Back");
+	registerActionCallback(&t9NextWord, "t9NextWord");
+	registerActionCallback(&t9PrevWord, "t9PrevWord");
 	initializeT9Form();
 }

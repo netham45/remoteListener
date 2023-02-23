@@ -15,7 +15,7 @@ using namespace std;
 
 xml_document<> cachedDoc;
 bool parsed = false;
-vector<char> buffer;
+vector<char> textBuffer;
 
 void cacheDoc()
 {
@@ -23,10 +23,10 @@ void cacheDoc()
 	if (!parsed)
 	{
 		std::ifstream t("./Config.xml");
-		buffer = vector<char>((istreambuf_iterator<char>(t)), istreambuf_iterator<char>());
-		buffer.push_back('\0');
+		textBuffer = vector<char>((istreambuf_iterator<char>(t)), istreambuf_iterator<char>());
+		textBuffer.push_back('\0');
 		t.close();
-		cachedDoc.parse<0>(&buffer[0]);
+		cachedDoc.parse<0>(&textBuffer[0]);
 		parsed = true;
 	}
 }

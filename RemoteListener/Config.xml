@@ -5,13 +5,13 @@
 
 	<Remote Name="magic4pc">
 		<Button Name="37">
-			<Action Function="SendVK" KeyCode="VK_LEFT" OS="Windows" />
+			<Action Function="t9PrevWord" OS="Windows" />
 		</Button>
 		<Button Name="38">
 			<Action Function="SendVK" KeyCode="VK_UP" OS="Windows" />
 		</Button>
 		<Button Name="39">
-			<Action Function="SendVK" KeyCode="VK_RIGHT" OS="Windows" />
+			<Action Function="t9NextWord" OS="Windows" />
 		</Button>
 		<Button Name="40">
 			<Action Function="SendVK" KeyCode="VK_DOWN" OS="Windows" />

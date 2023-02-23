@@ -107,6 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -167,8 +168,11 @@
     <ClCompile Include="Mode.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="RemoteListener.cpp" />
     <ClCompile Include="T9.cpp" />
+    <ClCompile Include="Trie.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actions.h" />
@@ -181,12 +185,17 @@
     <ClInclude Include="Mode.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="rapidxml.hpp" />
     <ClInclude Include="rapidxml_iterators.hpp" />
     <ClInclude Include="rapidxml_print.hpp" />
     <ClInclude Include="rapidxml_utils.hpp" />
     <ClInclude Include="RemoteListener.h" />
+    <ClInclude Include="secrets.h" />
     <ClInclude Include="T9.h" />
+    <ClInclude Include="Trie.h" />
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="wordlist.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Config.xml" />
@@ -195,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\readme.md" />
+    <None Include=".gitignore" />
     <None Include="Makefile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
