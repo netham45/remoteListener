@@ -103,12 +103,18 @@ void mouseClick(const char* repeat, const char* keycode, const char* param, cons
 
 void mouseClickDown(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
-	pressButton(currentButton);
+	if (param == "D")
+		pressButton(currentButton);
+	else
+		pressButton(atoi(param));
 }
 
 void mouseClickUp(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
-	releaseButton(currentButton);
+	if (param == "D")
+		releaseButton(currentButton);
+	else
+	    releaseButton(atoi(param));
 }
 
 void mouseHold(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)

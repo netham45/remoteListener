@@ -98,8 +98,8 @@ void runActionsForDeviceButton(const char* deviceName, const char* buttonName, i
 								}
 								parseAction(deviceName, buttonName, function.c_str(), repeat.c_str(), keycode.c_str(), param.c_str(), mode.c_str(), modeType.c_str(), OS.c_str(), numRepeat, &outputDevice);
 							}
-							//if (outputDevice && numRepeat == 0)
-							//	printf("Input - Device % s Button % s -- No Actions\n", deviceName, buttonName);
+							if (outputDevice && numRepeat == 0)
+								printf("Input - Device % s Button % s -- No Actions\n", deviceName, buttonName);
 							return;
 						}
 					}

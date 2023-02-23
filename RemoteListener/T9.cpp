@@ -1,6 +1,7 @@
 #include <time.h>
 #include "T9.h"
 #include "Keyboard.h"
+#include <strsafe.h>
 
 const char* t9keys[] = { " ,.0?!'\\`\":;", "@*1/-+=#$%^&~|(){}[]", "abc2ABC", "def3DEF", "ghi4GHI", "jkl5JKL", "mno6MNO", "pqrs7PRQS", "tuv8TUV", "wxyz9WXYZ" };
 
@@ -8,17 +9,21 @@ char buffer[1024] = { 0 };
 
 time_t lastPressTime = 0;
 int keyIndex = 0;
-int lastKey = 0;
+int lastKey = -1;
 
 
 HWND windowHandle = 0;
 LPCWSTR text = L"";
+LPCWSTR hintText = L"";
+int hintTextIndex = 0;
 ULONGLONG lastTS = 0;
 bool isShowing = false;
 
 RECT dest;
+RECT hintDest;
 HDC hDC;
 HGDIOBJ font;
+HGDIOBJ hintFont;
 HFONT hFontOld;
 
 void t9(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
@@ -41,12 +46,20 @@ void t9(const char* repeat, const char* keycode, const char* param, const char* 
 	}
 	lastKey = key;
 	drawText(buffer);
+	drawHintText(t9keys[key], keyIndex);
 }
 
 void t9send(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
 {
-	SendKeys(buffer);
-	clear();
+	if (strlen(buffer) > 0)
+	{
+		SendKeys(buffer);
+		clear();
+	}
+	else
+	{
+		SendKey(VK_RETURN);
+	}
 }
 
 void t9back(const char* repeat, const char* keycode, const char* param, const char* mode, const char* mode_type, int numRepeat)
@@ -54,11 +67,14 @@ void t9back(const char* repeat, const char* keycode, const char* param, const ch
 	if (strlen(buffer) > 0)
 	{
 		buffer[strlen(buffer) - 1] = 0; //Zero out the last character to backspace
+		lastPressTime = time(NULL);
 	}
 	else
 	{
 		SendVK(VK_BACK);
 	}
+	lastKey = -1;
+	drawHintText("", 0);
 	drawText(buffer);
 }
 
@@ -71,15 +87,20 @@ void clear()
 {
 	memset(buffer, 0, sizeof(buffer));
 	drawText(buffer);
+	drawHintText(buffer,0);
 }
 
 void initializeT9Form()
 {
 	std::string junk;
-	dest.top = GetSystemMetrics(SM_CYSCREEN) - 800;
+	dest.top = GetSystemMetrics(SM_CYSCREEN) - 500;
 	dest.left = 0;
 	dest.bottom = GetSystemMetrics(SM_CYSCREEN);
 	dest.right = GetSystemMetrics(SM_CXSCREEN);
+	hintDest.top = GetSystemMetrics(SM_CYSCREEN) - 200;
+	hintDest.left = 0;
+	hintDest.bottom = GetSystemMetrics(SM_CYSCREEN);
+	hintDest.right = GetSystemMetrics(SM_CXSCREEN);
 	auto t = CreateThread(nullptr, 0, [](void*) -> DWORD
 		{
 			WNDCLASS windowClass = { 0 };
@@ -111,7 +132,8 @@ void initializeT9Form()
 
 			hDC = GetWindowDC(windowHandle);
 			SetTextColor(hDC, RGB(50, 230, 70));
-			font = CreateFont(512, 0, 0, 0, 1000, false, false, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, L"Arial");
+			font = CreateFont(256, 0, 0, 0, 512, false, false, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, DEFAULT_PITCH, L"Verdana");
+			hintFont = CreateFont(128, 0, 0, 0, 512, false, false, false, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, DEFAULT_PITCH, L"Verdana");
 			hFontOld = (HFONT)SelectObject(hDC, font);
 
 			MSG messages;
@@ -126,6 +148,21 @@ void initializeT9Form()
 		nullptr, 0, nullptr);
 }
 
+void drawHintText(const char* _text, int highlightIndex)
+{
+	if (strlen(_text) == 0)
+	{
+		hintText = L"";
+	}
+	else
+	{
+		hintTextIndex = highlightIndex;
+		hintText = StringToLPCWSTR(_text);
+		HDC hdc = GetDC(windowHandle);
+		PostMessage(windowHandle, WM_PAINT, 2, 0);
+	}
+}
+
 void drawText(const char* _text)
 {
 	if (strlen(_text) == 0)
@@ -133,13 +170,12 @@ void drawText(const char* _text)
 		text = L"";
 		InvalidateRect(windowHandle, NULL, TRUE);
 		ShowWindow(windowHandle, SW_HIDE);
+		isShowing = false;
 	}
 	else
 	{
 		text = StringToLPCWSTR(_text);
-		//InvalidateRect(windowHandle, NULL, TRUE);
 		HDC hdc = GetDC(windowHandle);
-		Rectangle(hdc, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 		PostMessage(windowHandle, WM_PAINT, 2, 0);
 	}
 }
@@ -165,18 +201,48 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 	case WM_PAINT:
 		if (wparam == 1) //1 for hide
 		{
-			if (lastTS + (ULONGLONG)4500 < GetTickCount64())
+			time_t currentTime = time(NULL);
+			double seconds = difftime(currentTime, lastPressTime); //Get the time since the last keypress
+			if (seconds > 4.5)
 			{
+				isShowing = false;
 				ShowWindow(windowHandle, SW_HIDE);
 			}
 		}
 		else if (wparam == 2) //2 for show
 		{
-			lastTS = GetTickCount64();
-			ShowWindow(windowHandle, SW_NORMAL);
-			SetWindowPos(windowHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-			SetWindowLong(windowHandle, GWL_EXSTYLE, GetWindowLong(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOPMOST);
+			time_t currentTime = time(NULL);
+			double seconds = difftime(currentTime, lastPressTime); //Get the time since the last keypress
+			if (!isShowing && seconds < 2)
+			{
+				ShowWindow(windowHandle, SW_NORMAL);
+				SetWindowPos(windowHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+				SetWindowLong(windowHandle, GWL_EXSTYLE, GetWindowLong(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOPMOST);
+				isShowing = true;
+			}
+			Rectangle(hDC, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+			if (seconds < 2)
+			{
+				SetTextColor(hDC, RGB(50, 230, 70));
+				SelectObject(hDC, hintFont);
+				hintDest.left = 0;
+				DrawText(hDC, hintText, (int)wcslen(hintText), &hintDest, 0);
+				SetTextColor(hDC, RGB(200, 60, 35));
+				SIZE sz;
+				GetTextExtentPoint32(hDC, hintText, hintTextIndex, &sz);
+				hintDest.left = sz.cx;
+				DrawText(hDC, &hintText[hintTextIndex], 1, &hintDest, 0);
+			}
+			SelectObject(hDC, font);
+			SetTextColor(hDC, RGB(50, 230, 70));
 			DrawText(hDC, text, (int)wcslen(text), &dest, 0);
+			CreateThread(nullptr, 0, [](void*) -> DWORD
+				{
+					Sleep(2000);
+					PostMessage(windowHandle, WM_PAINT, 2, 0);
+					return 0;
+				},
+				nullptr, 0, nullptr);
 			CreateThread(nullptr, 0, [](void*) -> DWORD
 				{
 					Sleep(5000);

@@ -4,25 +4,25 @@
 	<Console Enabled="0" />
 
 	<Remote Name="magic4pc">
-		<Button Name="38_down">
+		<Button Name="38">
 			<Action Function="PressVK" KeyCode="VK_UP" repeat="0" OS="Windows" />
 		</Button>
 		<Button Name="38_up">
 			<Action Function="ReleaseVK" KeyCode="VK_UP" repeat="0" OS="Windows" />
 		</Button>
-		<Button Name="39_down">
+		<Button Name="39">
 			<Action Function="PressVK" KeyCode="VK_RIGHT" repeat="0" OS="Windows" />
 		</Button>
 		<Button Name="39_up">
 			<Action Function="ReleaseVK" KeyCode="VK_RIGHT" repeat="0" OS="Windows" />
 		</Button>
-		<Button Name="40_down">
+		<Button Name="40">
 			<Action Function="PressVK" KeyCode="VK_DOWN" repeat="0" OS="Windows" />
 		</Button>
 		<Button Name="40_up">
 			<Action Function="ReleaseVK" KeyCode="VK_DOWN" repeat="0" OS="Windows" />
 		</Button>
-		<Button Name="37_down">
+		<Button Name="37">
 			<Action Function="PressVK" KeyCode="VK_LEFT" repeat="0" OS="Windows" />
 		</Button>
 		<Button Name="37_up">

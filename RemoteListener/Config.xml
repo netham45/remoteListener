@@ -4,53 +4,50 @@
 	<Console Enabled="0" />
 
 	<Remote Name="magic4pc">
-		<Button Name="38_down">
-			<Action Function="PressVK" KeyCode="VK_UP" repeat="0" OS="Windows" />
+		<Button Name="37">
+			<Action Function="SendVK" KeyCode="VK_LEFT" OS="Windows" />
 		</Button>
-		<Button Name="38_up">
-			<Action Function="ReleaseVK" KeyCode="VK_UP" repeat="0" OS="Windows" />
+		<Button Name="38">
+			<Action Function="SendVK" KeyCode="VK_UP" OS="Windows" />
 		</Button>
-		<Button Name="39_down">
-			<Action Function="PressVK" KeyCode="VK_RIGHT" repeat="0" OS="Windows" />
+		<Button Name="39">
+			<Action Function="SendVK" KeyCode="VK_RIGHT" OS="Windows" />
 		</Button>
-		<Button Name="39_up">
-			<Action Function="ReleaseVK" KeyCode="VK_RIGHT" repeat="0" OS="Windows" />
-		</Button>
-		<Button Name="40_down">
-			<Action Function="PressVK" KeyCode="VK_DOWN" repeat="0" OS="Windows" />
-		</Button>
-		<Button Name="40_up">
-			<Action Function="ReleaseVK" KeyCode="VK_DOWN" repeat="0" OS="Windows" />
-		</Button>
-		<Button Name="37_down">
-			<Action Function="PressVK" KeyCode="VK_LEFT" repeat="0" OS="Windows" />
-		</Button>
-		<Button Name="37_up">
-			<Action Function="ReleaseVK" KeyCode="VK_LEFT" repeat="0" OS="Windows" />
+		<Button Name="40">
+			<Action Function="SendVK" KeyCode="VK_DOWN" OS="Windows" />
 		</Button>
 		<Button Name="403">
-			<Action ModeType="Input" Function="SendVK" KeyCode="VK_MEDIA_PREV_TRACK" OS="Windows" />
+			<Action Function="SendVK" KeyCode="VK_MEDIA_PREV_TRACK" OS="Windows" />
 		</Button>
 		<Button Name="404">
-			<Action ModeType="Input" Function="SendVK" KeyCode="VK_MEDIA_STOP" OS="Windows" />
+			<Action Function="SendVK" KeyCode="VK_MEDIA_STOP" OS="Windows" />
 		</Button>
 		<Button Name="405">
-			<Action ModeType="Input" Function="SendVK" KeyCode="VK_MEDIA_PLAY_PAUSE" OS="Windows" />
+			<Action Function="SendVK" KeyCode="VK_MEDIA_PLAY_PAUSE" OS="Windows" />
 		</Button>
 		<Button Name="406">
-			<Action ModeType="Input" Function="SendVK" KeyCode="VK_MEDIA_NEXT_TRACK" OS="Windows" />
+			<Action Function="SendVK" KeyCode="VK_MEDIA_NEXT_TRACK" OS="Windows" />
 		</Button>
 		<Button Name="13">
 			<Action Function="t9Send" OS="Windows" />
 		</Button>
-		<Button Name="33">
-			<Action Function="MouseCycleButtons" Repeat="A" OS="Windows" />
+		<Button Name="19">
+			<Action Function="MouseClickDown" Param="2" Repeat="0" OS="Windows" />
+		</Button>
+		<Button Name="19_up">
+			<Action Function="MouseClickUp" Param="2" Repeat="A" OS="Windows" />
+		</Button>
+		<Button Name="415">
+			<Action Function="MouseClickDown" Param="1" Repeat="0" OS="Windows" />
+		</Button>
+		<Button Name="415_up">
+			<Action Function="MouseClickUp" Param="1" Repeat="A" OS="Windows" />
 		</Button>
 		<Button Name="mousedown">
-			<Action Function="MouseClickDown" OS="Windows" />
+			<Action Function="MouseClickDown" Param="0" Repeat="0" OS="Windows" />
 		</Button>
 		<Button Name="mouseup">
-			<Action Function="MouseClickUp" OS="Windows" />
+			<Action Function="MouseClickUp" Param="0" Repeat="A" OS="Windows" />
 		</Button>
 		<Button Name="wheelup">
 			<Action Function="ScrollUp" Repeat="A" OS="Windows" />
@@ -90,6 +87,12 @@
 		</Button>
 		<Button Name="461">
 			<Action Function="t9Back" OS="Windows" />
+		</Button>
+		<Button Name="1028">
+			<Action Function="SendVK" KeyCode="VK_ESCAPE" OS="Windows" />
+		</Button>
+		<Button Name="417">
+			<Action Function="Run" Param="&quot;c:\services\remotelistener\SoundVolumeView.exe&quot; /DisableEnable LG TV SSCR2" OS="Windows" />
 		</Button>
 	</Remote>
 </Config>

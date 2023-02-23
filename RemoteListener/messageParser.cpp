@@ -72,13 +72,15 @@ void lirc_parseMessage(char* message, unsigned int messageLen)
 }
 
 uint8_t magicButtonsRepeat[2048] = { 0 };
+bool ignoreNextKey = false;
 
 void magic4pc_parseMessage(char* message, unsigned int messageLen, SOCKET ConnectSocket)
 {
 #ifdef _WIN32
 	/*printf("Got data for magic4pc\n");
 	for (int i=0;i<messageLen;i++)
-		printf("%c",message[i]);*/
+		printf("%c",message[i]);
+	printf("\n");*/
 	message[messageLen] = 0;
 	json data = json::parse(message);
 	string type = data["t"].get<string>();
@@ -101,22 +103,31 @@ void magic4pc_parseMessage(char* message, unsigned int messageLen, SOCKET Connec
 	}
 	else if (type == "input")
 	{
-		bool isPressed = data["parameters"]["isDown"].get<bool>();
+		bool isDown = data["parameters"]["isDown"].get<bool>();
 		int keyCode = data["parameters"]["keyCode"].get<int>();
-		if (isPressed)
+		if (ignoreNextKey)
 		{
-			char name[32];
-			sprintf(name, "%i", keyCode);
-			runActionsForDeviceButton("magic4pc",name, magicButtonsRepeat[keyCode]);
-			sprintf(name, "%i_down", keyCode);
-			runActionsForDeviceButton("magic4pc", name, magicButtonsRepeat[keyCode]++);
+			ignoreNextKey = false;
 		}
 		else
 		{
-			char name[32];
-			sprintf(name, "%i_up", keyCode);
-			runActionsForDeviceButton("magic4pc", name, magicButtonsRepeat[keyCode]);
-			magicButtonsRepeat[keyCode] = 0;
+			if (isDown)
+			{
+				char name[32];
+				sprintf(name, "%i", keyCode);
+				runActionsForDeviceButton("magic4pc", name, magicButtonsRepeat[keyCode]++);
+			}
+			else
+			{
+				char name[32];
+				sprintf(name, "%i_up", keyCode);
+				runActionsForDeviceButton("magic4pc", name, magicButtonsRepeat[keyCode]);
+				magicButtonsRepeat[keyCode] = 0;
+			}
+		}
+		if (keyCode == 1537 and isDown)
+		{
+			ignoreNextKey = true;
 		}
 	}
 	else if (type == "mouse")
