@@ -168,7 +168,7 @@ void findT9Word()
 		}
 		if (hintTextLength3 < 0)
 		{
-			hintTextLength3 = 0;
+            hintTextLength3 = 0;
 		}
 	}
 	printf("hintTextLength3 %i hintTextIndex3 %i\n", hintTextLength3, hintTextIndex3);

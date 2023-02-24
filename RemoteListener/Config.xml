@@ -2,10 +2,10 @@
 <Config>
 	<Server Host="192.168.5.101" Port="42831" Type="magic4pc" />
 	<Console Enabled="0" />
-    <Modes Name="AltTab">
-	    <Mode Name="Inactive" />
-        <Mode Name="Active" />
-    </Modes>
+	<Modes Name="AltTab">
+		<Mode Name="Inactive" />
+		<Mode Name="Active" />
+	</Modes>
 	<Remote Name="magic4pc">
 		<Button Name="37">
 			<Action Function="t9PrevWord" OS="Windows" />
@@ -33,8 +33,8 @@
 		</Button>
 		<Button Name="13">
 			<Action Function="t9Send" OS="Windows" />
-		    <Action Function="ReleaseVK" KeyCode="VK_MENU" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
-            <Action Function="ModeSet" KeyCode="AltTab" Param="Inactive" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
+			<Action Function="ReleaseVK" KeyCode="VK_MENU" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
+			<Action Function="ModeSet" KeyCode="AltTab" Param="Inactive" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
 		</Button>
 		<Button Name="19">
 			<Action Function="MouseClickDown" Param="2" Repeat="0" OS="Windows" />
@@ -42,7 +42,7 @@
 		<Button Name="19_up">
 			<Action Function="MouseClickUp" Param="2" Repeat="A" OS="Windows" />
 			<Action Function="ReleaseVK" KeyCode="VK_MENU" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
-            <Action Function="ModeSet" KeyCode="AltTab" Param="Inactive" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
+			<Action Function="ModeSet" KeyCode="AltTab" Param="Inactive" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
 		</Button>
 		<Button Name="415">
 			<Action Function="MouseClickDown" Param="1" Repeat="0" OS="Windows" />
@@ -50,7 +50,7 @@
 		<Button Name="415_up">
 			<Action Function="MouseClickUp" Param="1" Repeat="A" OS="Windows" />
 			<Action Function="ReleaseVK" KeyCode="VK_MENU" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
-            <Action Function="ModeSet" KeyCode="AltTab" Param="Inactive" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
+			<Action Function="ModeSet" KeyCode="AltTab" Param="Inactive" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
 		</Button>
 		<Button Name="mousedown">
 			<Action Function="MouseClickDown" Param="0" Repeat="0" OS="Windows" />
@@ -58,7 +58,7 @@
 		<Button Name="mouseup">
 			<Action Function="MouseClickUp" Param="0" Repeat="A" OS="Windows" />
 			<Action Function="ReleaseVK" KeyCode="VK_MENU" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
-            <Action Function="ModeSet" KeyCode="AltTab" Param="Inactive" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
+			<Action Function="ModeSet" KeyCode="AltTab" Param="Inactive" ModeType="AltTab" Mode="Active" OS="Windows" Repeat="A" />
 		</Button>
 		<Button Name="wheelup">
 			<Action Function="ScrollUp" Repeat="A" OS="Windows" />
@@ -109,7 +109,7 @@
 			<Action Function="PressVK" KeyCode="VK_MENU" ModeType="AltTab" Mode="Inactive" OS="Windows" />
 			<Action Function="PressVK" KeyCode="VK_TAB" ModeType="AltTab" OS="Windows" />
 			<Action Function="ReleaseVK" KeyCode="VK_TAB" ModeType="AltTab" OS="Windows" />
-		    <Action Function="ModeSet" KeyCode="AltTab" Param="Active" OS="Windows" />	
+			<Action Function="ModeSet" KeyCode="AltTab" Param="Active" OS="Windows" />	
 		</Button>
 		<Button Name="34">
 			<Action Function="PressVK" KeyCode="VK_MENU" OS="Windows" />
