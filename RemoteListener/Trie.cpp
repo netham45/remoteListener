@@ -68,17 +68,17 @@ Node* getNthChildNode(Node* root, int &index, int depth)
     return NULL;
 }
 
-Node** getTenChildrenWithWords(Node * root, Node** Children)
+Node** getChildrenWithWords(Node * root, Node** Children)
 {
-    
+    const int MAX_DEPTH = 10;
     //memset(Children, 0, sizeof(Children));
     int foundChildren = 0;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < MAX_DEPTH; i++)
     {
         Node* child = 0;
         do
         {
-            int _foundChildren = foundChildren;
+            int _foundChildren = foundChildren; 
             child = getNthChildNode(root, _foundChildren, i);
             if (child)
             {
@@ -88,9 +88,9 @@ Node** getTenChildrenWithWords(Node * root, Node** Children)
             {
                 break;
             }
-            if (foundChildren >= 30)
+            if (foundChildren >= NUM_CHILDREN_TO_GET)
             {
-                i = 10;
+                i = MAX_DEPTH;
                 break;
             }
                 

@@ -47,6 +47,8 @@ void printTrie(Node * root, int level);
 // Prints the numTabs many tabs
 void printTabs(int numTabs);
 
-Node** getTenChildrenWithWords(Node* root, Node** Children);
+Node** getChildrenWithWords(Node* root, Node** Children);
+
+#define NUM_CHILDREN_TO_GET 120
 
 #endif

@@ -11,6 +11,7 @@ char textBuffer[1024] = { 0 };
 char phoneKeyBuffer[1024];
 
 time_t lastPressTime = 0;
+time_t lastPhoneLetterTime = 0;
 int keyIndex = 0;
 int lastKey = -1;
 
@@ -19,8 +20,12 @@ HWND windowHandle = 0;
 LPCWSTR text = L"";
 LPCWSTR hintText = L"";
 std::string hintTextStr = "";
-int hintTextIndex = 0;
-int hintTextLength = 0;
+int hintTextIndex1 = 0;
+int hintTextLength1 = 0;
+int hintTextIndex2 = 0;
+int hintTextLength2 = 0;
+int textIndex1 = 0;
+int textLength1 = 0;
 int t9WordIndex = 0;
 ULONGLONG lastTS = 0;
 bool isShowing = false;
@@ -70,7 +75,7 @@ void findT9Word()
 	phoneKeyNode->next = 0;
 	phoneKeyNode->children = {0};
 
-	Node* Children[31] = { 0 };
+	Node* Children[NUM_CHILDREN_TO_GET] = { 0 };
 	int start = 0;
 	if (strlen(phoneKeyNode->word) > 0)
 	{
@@ -80,9 +85,9 @@ void findT9Word()
 	{
 		start = 1;
 	}
-	getTenChildrenWithWords(wordNode, &Children[1]);
+	getChildrenWithWords(wordNode, &Children[1]);
 	int lastIndex = 0;
-	for (int i = start; i < 30; i++)
+	for (int i = start; i < NUM_CHILDREN_TO_GET; i++)
 	{
 		Node* currentNode = Children[i];
 		if (currentNode && currentNode->word)
@@ -92,22 +97,36 @@ void findT9Word()
 	}
 	if (t9WordIndex > lastIndex)
 		t9WordIndex = lastIndex;
-	for (int i = start; i < 30; i++)
+	for (int i = start; i < NUM_CHILDREN_TO_GET; i++)
 	{
 		Node* currentNode = Children[i];
 		if (!currentNode)
 			continue;
 		if (currentNode && currentNode->word)
 		{
-			printf("currentNode: %s\n", currentNode->word);
 			if (i == t9WordIndex)
 			{
-				hintTextIndex = hintTextStr.length() + 1;
-				hintTextLength = strlen(currentNode->word);
+				hintTextIndex1 = hintTextStr.length() + 1;
+				hintTextLength1 = strlen(currentNode->word);
 				selectedNode = currentNode;
+				if (i == 0)
+				{
+					hintTextIndex2 = keyIndex;
+					hintTextLength2 = 1;
+					textIndex1 = 0;
+					textLength1 = 0;
+				}
+				else
+				{
+					hintTextIndex2 = 0;
+					hintTextLength2 = 0;
+					textIndex1 = 0;
+					textLength1 = strlen(t9Numbers);
+				}
 			}
 			hintTextStr = hintTextStr + " " + currentNode->word;
 		}
+
 	}
 	if (selectedNode && selectedNode->word) {
 
@@ -124,17 +143,18 @@ void findT9Word()
 		  strcpy_s(textBuffer, sizeof(textBuffer), selectedNode->word);
 	}
 
-	if (hintTextIndex > 12)
+	if (hintTextIndex1 > 12)
 	{
-		hintTextStr = hintTextStr.substr(hintTextIndex - 12);
-		hintTextIndex = 12;
+		hintTextStr = hintTextStr.substr(hintTextIndex1 - 12);
+		hintTextIndex1 = 12;
 	}
 }
 
 void phoneKey(uint8_t key)
 {
 	time_t currentTime = time(NULL);
-	double seconds = difftime(currentTime, lastPressTime); //Get the time since the last keypress
+	double seconds = difftime(currentTime, lastPhoneLetterTime); //Get the time since the last keypress
+	lastPhoneLetterTime = currentTime;
 	if (seconds < 2 && strlen(phoneKeyBuffer) > 0 && lastKey == key)
 	{
 		++keyIndex %= strlen(phoneKeys[key]); //Cycle through characters in the string
@@ -379,6 +399,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 		{
 			time_t currentTime = time(NULL);
 			double seconds = difftime(currentTime, lastPressTime); //Get the time since the last keypress
+			double phoneKeySeconds = difftime(currentTime, lastPhoneLetterTime); //Get the time since the last keypress
 			if (!isShowing && seconds < 2)
 			{
 				ShowWindow(windowHandle, SW_NORMAL);
@@ -387,7 +408,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 				isShowing = true;
 			}
 			Rectangle(hDC, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-			if (seconds < 2)
+			if (seconds < 4)
 			{
 				SetTextColor(hDC, RGB(50, 230, 70));
 				SelectObject(hDC, hintFont);
@@ -395,17 +416,33 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 				DrawText(hDC, hintText, (int)wcslen(hintText), &hintDest, 0);
 				SetTextColor(hDC, RGB(200, 60, 35));
 
-				if (hintTextIndex < wcslen(hintText))
+				if (hintTextIndex1 < wcslen(hintText))
 				{
 					SIZE sz;
-					GetTextExtentPoint32(hDC, hintText, hintTextIndex, &sz);
+					GetTextExtentPoint32(hDC, hintText, hintTextIndex1, &sz);
 					hintDest.left = sz.cx;
-					DrawText(hDC, &hintText[hintTextIndex], hintTextLength, &hintDest, 0);
+					DrawText(hDC, &hintText[hintTextIndex1], hintTextLength1, &hintDest, 0);
+				}
+				if (hintTextIndex2 < wcslen(hintText) && phoneKeySeconds < 2)
+				{
+					SIZE sz;
+					GetTextExtentPoint32(hDC, hintText, hintTextIndex2, &sz);
+					hintDest.left = sz.cx;
+					DrawText(hDC, &hintText[hintTextIndex2], hintTextLength2, &hintDest, 0);
 				}
 			}
 			SelectObject(hDC, font);
 			SetTextColor(hDC, RGB(50, 230, 70));
+			dest.left = 0;
 			DrawText(hDC, text, (int)wcslen(text), &dest, 0);
+			if (textIndex1 < wcslen(text))
+			{
+				SetTextColor(hDC, RGB(200, 60, 35));
+				SIZE sz;
+				GetTextExtentPoint32(hDC, text, textIndex1, &sz);
+				dest.left = sz.cx;
+				DrawText(hDC, &text[textIndex1], textLength1, &dest, 0);
+			}
 			CreateThread(nullptr, 0, [](void*) -> DWORD
 				{
 					Sleep(2000);
