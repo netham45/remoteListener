@@ -17,9 +17,10 @@
 
 #define MAX_WORD_LENGTH 100
 #define NUM_ALPHABET 26
+#define NUM_CHILDREN_TO_GET 300
 
 // Inserts the given word to trie, modifying the structure if necessary
-void insert(Node * root, const char * word);
+void insert(Node* root, const char* word, int wordfreq);
 
 // Ruilds trie with words in the specified file.
 // prints error message if it's not a valid file.
@@ -49,6 +50,6 @@ void printTabs(int numTabs);
 
 Node** getChildrenWithWords(Node* root, Node** Children);
 
-#define NUM_CHILDREN_TO_GET 120
+
 
 #endif

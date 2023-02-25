@@ -78,7 +78,11 @@ void findT9Word()
 	hintTextIndex3 = 0;
 	hintTextLength3 = 0;
 
-	Node* Children[NUM_CHILDREN_TO_GET] = { 0 };
+	Node* Children[NUM_CHILDREN_TO_GET + 1] = { 0 };
+	for (int i = 0; i < NUM_CHILDREN_TO_GET + 1; i++)
+	{
+		Children[i] = 0;
+	}
 	int start = 0;
 	if (strlen(phoneKeyNode->word) > 0)
 	{
@@ -379,9 +383,7 @@ void drawHintText(const char* _text, int highlightIndex, int highlightLength)
 	}
 	else
 	{
-		printf("drawHintText: \"%s\"",_text);
 		hintText = StringToLPCWSTR(_text);
-		printf("drawHintText: \"%ls\"", hintText);
 		HDC hdc = GetDC(windowHandle);
 		PostMessage(windowHandle, WM_PAINT, 2, 0);
 	}
@@ -398,9 +400,7 @@ void drawText(const char* _text)
 	}
 	else
 	{
-		printf("drawHintText: \"%s\"", _text);
 		text = StringToLPCWSTR(_text);
-		printf("drawHintText: \"%ls\"", text);
 		HDC hdc = GetDC(windowHandle);
 		PostMessage(windowHandle, WM_PAINT, 2, 0);
 	}
@@ -519,7 +519,7 @@ void buildWordList()
 
 	for (int i = 0; i < WORDLIST_LEN; i++)
 	{
-		insert(rootWordNode, WORDLIST[i]);
+		insert(rootWordNode, WORDLIST[i], WORDFREQ[i]);
 	}
 	clear();
 }

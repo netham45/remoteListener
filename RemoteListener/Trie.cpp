@@ -11,6 +11,9 @@
 
 #include "Util.h"
 #include "Trie.h"
+#include <vector>
+#include <algorithm>
+
 // Returns dictionary word that corresponds to the given key sequence.
 Node * search(char * keySeq, Node * root) {
   Node * current = root;
@@ -31,26 +34,29 @@ Node * search(char * keySeq, Node * root) {
   return current;
 }
 
-Node* getNthChildNode(Node* root, int &index, int depth)
+Node* getNthChildNode(Node* root, int &index, int depth, int startingdepth)
 {
     Node* curNode = root;
-    if (depth <= 0)
+    if (depth < 0)
         return NULL;
-    while (curNode)
+    if (depth == 0)
     {
-        if (curNode != NULL)
-            if (curNode->word)
-            {
-                if (index == 0)
+        while (curNode)
+        {
+            if (curNode != NULL)
+                if (curNode->word)
                 {
-                    return curNode;
+                    if (index == 0)
+                    {
+                        return curNode;
+                    }
+                    else
+                    {
+                        index--;
+                    }
                 }
-                else
-                {
-                    index--;
-                }
-            }        
-        curNode = curNode->next;
+            curNode = curNode->next;
+        }
     }
     curNode = root;
     while (curNode)
@@ -58,7 +64,7 @@ Node* getNthChildNode(Node* root, int &index, int depth)
         for (int i = 0; i<8; i++) {
             if (curNode->children[i])
             {
-                Node* childNode = getNthChildNode(curNode->children[i], index, depth--);
+                Node* childNode = getNthChildNode(curNode->children[i], index, depth - 1, startingdepth);
                 if (childNode != NULL)
                     return childNode;
             }
@@ -68,18 +74,27 @@ Node* getNthChildNode(Node* root, int &index, int depth)
     return NULL;
 }
 
+
+bool sortNodeFreq(Node* node1, Node* node2)
+{
+    if (!node1 || !node2) return false;
+    return node1->freq > node2->freq;
+}
+
 Node** getChildrenWithWords(Node * root, Node** Children)
 {
-    const int MAX_DEPTH = 10;
+    const int MAX_DEPTH = 25;
     //memset(Children, 0, sizeof(Children));
     int foundChildren = 0;
+    int depthStart = 0;
     for (int i = 0; i < MAX_DEPTH; i++)
     {
+        depthStart = foundChildren;
         Node* child = 0;
         do
         {
-            int _foundChildren = foundChildren; 
-            child = getNthChildNode(root, _foundChildren, i);
+            int depthChild = foundChildren - depthStart;
+            child = getNthChildNode(root, depthChild, i, i);
             if (child)
             {
                 Children[foundChildren++] = child;
@@ -95,6 +110,17 @@ Node** getChildrenWithWords(Node * root, Node** Children)
             }
                 
         } while (child);
+        std::vector<Node*> childrenSort;
+        for (int j = depthStart; j < foundChildren; j++)
+        {
+            if (Children[j])
+                childrenSort.push_back(Children[j]);
+        }
+        std::sort(childrenSort.begin(), childrenSort.end(), sortNodeFreq);
+        for (int j = depthStart; j < foundChildren; j++)
+        {
+             Children[j] = childrenSort[j - depthStart];
+        }
     }
     return Children;
 }
@@ -105,7 +131,7 @@ Node** getChildrenWithWords(Node * root, Node** Children)
 // Does not modify existing common prefix path.
 // e.g. Inserting 'ab' and 'abc' add 3 nodes in total because
 // 'ab' is common prefix.
-void insert(Node * root, const char * word) {
+void insert(Node * root, const char * word, int wordfreq) {
   Node * current = root;
   int wordIndex = 0;
 
@@ -139,6 +165,7 @@ void insert(Node * root, const char * word) {
   // Note: sizeof(char) is 1 in all machine
   current->word = (char *) mallocVerif(len);
   strncpy_s(current->word, len, word, len);
+  current->freq = wordfreq;
 }
 
 // Builds trie with words in the specified file.
@@ -156,7 +183,7 @@ Node * build(FILE * fp) {
     if (word[len - 1] == '\n') {
       word[len - 1] = '\0';
     }
-    insert(root, word);
+    insert(root, word, 0);
   }
   free(word);
   return root;

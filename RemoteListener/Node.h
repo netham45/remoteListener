@@ -17,6 +17,7 @@ typedef struct node_t {
   char * word;
   struct node_t * next;
   struct node_t ** children;
+  int freq;
 } Node;
 
 
